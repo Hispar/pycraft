@@ -8,6 +8,7 @@ from pyglet.graphics import Batch, TextureGroup
 from pyglet.window import mouse
 
 from pycraft.objects import Brick, Stone, Grass
+from pycraft.objects.mobs.chicken import Chicken
 from pycraft.util import normalize, sectorize, cube_vertices, cube_shade
 from pycraft.shader import Shader
 
@@ -34,6 +35,8 @@ class World:
         # A mapping from position to the texture of the block at that position.
         # This defines all the blocks that are currently in the world.
         self.objects = {}
+        # This defines all the mobs that are currently in the world.
+        self.mobs = {}
         # Same mapping as `world` but only contains blocks that are shown.
         self.shown = {}
         # Mapping from position to a pyglet `VertextList` for all shown blocks.
@@ -49,6 +52,7 @@ class World:
         self.queue = deque()
         self.init_gl()
         self._initialize()
+        self._initialize_mobs()
         self.init_shader()
 
     def init_gl(self):
@@ -104,6 +108,11 @@ class World:
                         else:
                             block = Grass()
                         self.add_block((x, y_lvl, z), block, immediate=False)
+
+    def _initialize_mobs(self):
+        mob = Chicken()
+        self.mobs[mob.name] = mob
+        self.sectors.setdefault(sectorize(mob.position), []).append(mob.position)
 
     def hit_test(self, position, vector, max_distance=8):
         """Line of sight search from current position. If a block is
@@ -239,6 +248,27 @@ class World:
             ('c3f/static', shade_data),
             ('t2f/static', texture_data))
 
+    def show_mob(self, mob):
+        """Show the mob in its current position
+
+        Parameters
+        ----------
+        mob : Object of class Mob
+        """
+        x, y, z = mob.position
+        vertex_data = cube_vertices(x, y, z, 0.5)
+        shade_data = cube_shade(1, 1, 1, 1)
+        texture_data = mob.texture
+        print(mob.identifier)
+        # if texture is not loaded, load it
+        if mob.identifier not in self.texture_group:
+            self.texture_group[mob.identifier] = TextureGroup(image.load(mob.texture_path).get_texture())
+        self._shown[mob.position] = self.batch.add(
+            24, GL_QUADS, self.texture_group[mob.identifier],
+            ('v3f/static', vertex_data),
+            ('c3f/static', shade_data),
+            ('t2f/static', texture_data))
+
     def hide_block(self, position, immediate=True):
         """Hide the block at the given `position`. Hiding does not remove the
         block from the world.
@@ -265,8 +295,11 @@ class World:
         to the canvas.
         """
         for position in self.sectors.get(sector, []):
-            if position not in self.shown and self.exposed(position):
+            if position not in self.shown and self.exposed(position) and position in self.objects:
                 self.show_block(position, False)
+            for key, mob in self.mobs.items():
+                if mob.position == position:
+                    self.show_mob(mob)
 
     def hide_sector(self, sector):
         """Ensure all blocks in the given sector that should be hidden are
