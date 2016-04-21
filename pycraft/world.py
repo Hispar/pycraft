@@ -251,14 +251,19 @@ class World:
             ('c3f/static', shade_data),
             ('t2f/static', texture_data))
 
-    def show_mob(self, mob):
+    def show_mob(self, mob, immediate=True):
         """Show the mob in its current position
 
         Parameters
         ----------
         mob : Object of class Mob
+        immediate : bool
+            Whether or not to show the block immediately.
         """
-        self._show_block(mob.position, mob)
+        if immediate:
+            self._show_block(mob.position, mob)
+        else:
+            self._enqueue(self._show_block, mob.position, mob)
 
     def hide_block(self, position, immediate=True):
         """Hide the block at the given `position`. Hiding does not remove the
