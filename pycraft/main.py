@@ -22,7 +22,7 @@ def main():
     )
     # Hide the mouse cursor and prevent the mouse from leaving the window.
     window.set_exclusive_mouse(config_data["window"]["exclusive_mouse"])
-    world = World()
+    world = World(config_data["world"])
     window.set_world(world)
     player = Player(config_data["world"])
     window.set_player(player)

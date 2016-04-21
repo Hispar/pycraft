@@ -26,7 +26,10 @@ FACES = [
 
 
 class World:
-    def __init__(self):
+    def __init__(self, config):
+        # Configuration data for World objects
+        self.config = config
+
         # A Batch is a collection of vertex lists for batched rendering.
         self.batch = Batch()
         # A TextureGroup manages an OpenGL texture.
