@@ -1,3 +1,7 @@
+# python imports
+import sys
+
+# project imports
 from .object import WorldObject
 from .textures import tex_coords
 
@@ -21,47 +25,42 @@ class Block(WorldObject):
         return self.block_duration == 0
 
 
-def get_block(id):
-    if id == "brick":
-        return Brick()
-    elif id == "grass":
-        return Grass()
-    elif id == "sand":
-        return Sand()
-    elif id == "weakstone":
-        return WeakStone()
-    elif id == "stone":
-        return Stone()
+def get_block(identifier):
+    try:
+        classname = globals()[identifier.capitalize()]
+        return classname()
+    except KeyError:
+        sys.exit('Exiting! Class {} can\'t be instanciated'.format(identifier))
 
 
 class Brick(Block):
-    identifier = 'brick'
+    identifier = 'Brick'
     texture = BRICK
     breakable = True
     durability = 10
 
 
 class Grass(Block):
-    identifier = 'grass'
+    identifier = 'Grass'
     texture = GRASS
     breakable = True
     durability = 5
 
 
 class Sand(Block):
-    identifier = 'sand'
+    identifier = 'Sand'
     texture = SAND
     breakable = True
     durability = 2
 
 
 class WeakStone(Block):
-    identifier = 'weak_stone'
+    identifier = 'WeakStone'
     texture = STONE
     breakable = True
     durability = 15
 
 
 class Stone(Block):
-    identifier = 'stone'
+    identifier = 'Stone'
     texture = STONE
