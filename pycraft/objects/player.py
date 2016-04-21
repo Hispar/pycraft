@@ -5,20 +5,6 @@ from .blocks.water import Water
 from .object import WorldObject
 from ..util import normalize
 
-PLAYER_HEIGHT = 2
-GRAVITY = 20.0
-MAX_JUMP_HEIGHT = 2.0  # About the height of two blocks.
-# To derive the formula for calculating jump speed, first solve
-#    v_t = v_0 + a * t
-# for the time at which you achieve maximum height, where a is the acceleration
-# due to gravity and v_t = 0. This gives:
-#    t = - v_0 / a
-# Use t and the desired MAX_JUMP_HEIGHT to solve for v_0 (jump speed) in
-#    s = s_0 + v_0 * t + (a * t^2) / 2
-JUMP_SPEED = math.sqrt(2 * GRAVITY * MAX_JUMP_HEIGHT)
-TERMINAL_VELOCITY = 50
-WALKING_SPEED = 5
-FLYING_SPEED = 15
 FACES = [
     (0, 1, 0),
     (0, -1, 0),
@@ -31,7 +17,7 @@ FACES = [
 
 class Player(WorldObject):
 
-    def __init__(self):
+    def __init__(self, config):
         # When flying gravity has no effect and speed is increased.
         self.flying = False
         # Strafing is moving lateral to the direction you are facing,
@@ -61,6 +47,27 @@ class Player(WorldObject):
         # The current block the user can place. Hit num keys to cycle.
         self.block = self.inventory[0]
 
+        # General Configuration
+
+        # gravity
+        self.gravity = config["gravity"]
+        # speed
+        self.walking_speed = config["walking_speed"]
+        self.flying_speed = config["flying_speed"]
+        # player height
+        self.player_height = config["player_height"]
+        # terminal velocity
+        self.terminal_velocity = config["terminal_velocity"]
+
+        # To derive the formula for calculating jump speed, first solve
+        #    v_t = v_0 + a * t
+        # for the time at which you achieve maximum height, where a is the acceleration
+        # due to gravity and v_t = 0. This gives:
+        #    t = - v_0 / a
+        # Use t and the desired MAX_JUMP_HEIGHT to solve for v_0 (jump speed) in
+        #    s = s_0 + v_0 * t + (a * t^2) / 2
+        self.jump_speed = math.sqrt(2 * self.gravity * config["max_jump_height"])
+
     def strafe_forward(self):
         self.strafe[0] -= 1
 
@@ -87,7 +94,7 @@ class Player(WorldObject):
             self.strafe_up()
         else:
             if self.dy == 0:
-                self.dy = JUMP_SPEED
+                self.dy = self.jump_speed
 
     def fly(self):
         """Toggles flying mode"""
@@ -162,7 +169,7 @@ class Player(WorldObject):
             The change in time since the last call.
         """
         # walking
-        speed = FLYING_SPEED if self.flying else WALKING_SPEED
+        speed = self.flying_speed if self.flying else self.walking_speed
         d = dt * speed  # distance covered this tick.
         dx, dy, dz = self.get_motion_vector()
         # New position in space, before accounting for gravity.
@@ -172,13 +179,13 @@ class Player(WorldObject):
             # Update your vertical speed: if you are falling, speed up until you
             # hit terminal velocity; if you are jumping, slow down until you
             # start falling.
-            self.dy -= dt * GRAVITY
-            self.dy = max(self.dy, -TERMINAL_VELOCITY)
+            self.dy -= dt * self.gravity
+            self.dy = max(self.dy, -self.terminal_velocity)
             dy += self.dy * dt
         # collisions
         x, y, z = self.position
         x, y, z = self.collide((x + dx, y + dy, z + dz),
-                               PLAYER_HEIGHT, objects)
+                               self.player_height, objects)
         self.position = (x, y, z)
 
     def collide(self, position, height, objects):
