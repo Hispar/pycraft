@@ -1,15 +1,18 @@
+# python imports
 import math
 
+# 3rd party imports
 import pyglet.clock
 import pyglet.graphics
 import pyglet.window
 from pyglet.gl import *
 from pyglet.window import key, mouse
 
+# project imports
 from pycraft.util import sectorize, cube_vertices
 from pycraft.objects.block import get_block
 
-#TICKS_PER_SEC = 60
+# TICKS_PER_SEC = 60
 # Convenience list of num keys.
 NUMERIC_KEYS = [
     key._1, key._2, key._3, key._4, key._5,
@@ -18,7 +21,6 @@ NUMERIC_KEYS = [
 
 
 class Window(pyglet.window.Window):
-
     def __init__(self, ticks_ps, *args, **kwargs):
         super(Window, self).__init__(*args, **kwargs)
         self.set_world(None)
