@@ -153,11 +153,6 @@ class Character(WorldObject):
         position : tuple of len 3
             The new position of the character taking into account collisions.
         """
-        # How much overlap with a dimension of a surrounding block you need to
-        # have to count as a collision. If 0, touching terrain at all counts as
-        # a collision. If .49, you sink into the ground, as if walking through
-        # tall grass. If >= .5, you'll fall through the ground.
-        pad = 0.25
         p = list(position)
         np = normalize(position)
         for face in FACES:  # check all surrounding blocks
@@ -166,6 +161,13 @@ class Character(WorldObject):
                     continue
                 # How much overlap you have with this dimension.
                 d = (p[i] - np[i]) * face[i]
+                # print(p)
+                # print(np)
+                # print(face)
+                # import operator
+                # tuple(map(operator.add, a, b))
+                # print(x)
+                # exit()
                 if d < pad:
                     continue
                 for dy in range(height):  # check each height
@@ -182,7 +184,7 @@ class Character(WorldObject):
                     break
         return tuple(p)
 
-    def update(self, dt, objects):
+    def update(self, dt, objects, mobs):
         """Private implementation of the `update()` method. This is where most
         of the motion logic lives, along with gravity and collision detection.
 
