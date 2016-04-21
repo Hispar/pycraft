@@ -240,10 +240,10 @@ class World:
         vertex_data = cube_vertices(x, y, z, 0.5)
         shade_data = cube_shade(1, 1, 1, 1)
         texture_data = block.texture
-        if block.id not in self.texture_group:
-            self.texture_group[block.id] = TextureGroup(image.load(block.texture_path).get_texture())
+        if block.identifier not in self.texture_group:
+            self.texture_group[block.identifier] = TextureGroup(image.load(block.texture_path).get_texture())
         self._shown[position] = self.batch.add(
-            24, GL_QUADS, self.texture_group[block.id],
+            24, GL_QUADS, self.texture_group[block.identifier],
             ('v3f/static', vertex_data),
             ('c3f/static', shade_data),
             ('t2f/static', texture_data))
@@ -255,19 +255,7 @@ class World:
         ----------
         mob : Object of class Mob
         """
-        x, y, z = mob.position
-        vertex_data = cube_vertices(x, y, z, 0.5)
-        shade_data = cube_shade(1, 1, 1, 1)
-        texture_data = mob.texture
-        print(mob.identifier)
-        # if texture is not loaded, load it
-        if mob.identifier not in self.texture_group:
-            self.texture_group[mob.identifier] = TextureGroup(image.load(mob.texture_path).get_texture())
-        self._shown[mob.position] = self.batch.add(
-            24, GL_QUADS, self.texture_group[mob.identifier],
-            ('v3f/static', vertex_data),
-            ('c3f/static', shade_data),
-            ('t2f/static', texture_data))
+        self._show_block(mob.position, mob)
 
     def hide_block(self, position, immediate=True):
         """Hide the block at the given `position`. Hiding does not remove the

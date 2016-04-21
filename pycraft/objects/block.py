@@ -25,33 +25,33 @@ class Block(WorldObject):
 
 
 class Brick(Block):
-    id = 1
+    identifier = 'brick'
     texture = BRICK
     breakable = True
     durability = 10
 
 
 class Grass(Block):
-    id = 2
+    identifier = 'grass'
     texture = GRASS
     breakable = True
     durability = 5
 
 
 class Sand(Block):
-    id = 3
+    identifier = 'sand'
     texture = SAND
     breakable = True
     durability = 2
 
 
 class WeakStone(Block):
-    id = 4
+    identifier = 'weak_stone'
     texture = STONE
     breakable = True
     durability = 15
 
 
 class Stone(Block):
-    id = 5
+    identifier = 'stone'
     texture = STONE
