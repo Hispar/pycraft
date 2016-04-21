@@ -83,7 +83,7 @@ class Player(Character):
         dz = math.sin(math.radians(x - 90)) * m
         return dx, dy, dz
 
-    def update(self, dt, objects):
+    def update(self, dt, objects, mobs):
         """Private implementation of the `update()` method. This is where most
         of the motion logic lives, along with gravity and collision detection.
 
@@ -92,6 +92,5 @@ class Player(Character):
         dt : float
             The change in time since the last call.
         """
-        # walking
         self.speed = self.flying_speed if self.flying else self.walking_speed
-        return super(Player, self).update(dt, objects)
+        return super(Player, self).update(dt, objects, mobs)
