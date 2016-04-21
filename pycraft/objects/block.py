@@ -21,6 +21,19 @@ class Block(WorldObject):
         return self.block_duration == 0
 
 
+def get_block(id):
+    if id == "brick":
+        return Brick()
+    elif id == "grass":
+        return Grass()
+    elif id == "sand":
+        return Sand()
+    elif id == "weakstone":
+        return WeakStone()
+    elif id == "stone":
+        return Stone()
+
+
 class Brick(Block):
     identifier = 'brick'
     texture = BRICK
