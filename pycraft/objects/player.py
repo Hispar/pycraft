@@ -2,7 +2,7 @@ import math
 
 from .block import Brick, Grass, Sand, WeakStone
 from .blocks.water import Water
-from .object import WorldObject
+from pycraft.objects.character import Character
 from ..util import normalize
 
 FACES = [
@@ -15,9 +15,10 @@ FACES = [
 ]
 
 
-class Player(WorldObject):
+class Player(Character):
 
     def __init__(self, config):
+        super(Player, self).__init__(config, position=(0, 5, 0))
         # When flying gravity has no effect and speed is increased.
         self.flying = False
         # Strafing is moving lateral to the direction you are facing,
@@ -30,9 +31,6 @@ class Player(WorldObject):
         # This is strafing in the absolute up/down position, not
         # relative to where the player is facing. 1 when moving up, -1 when moving down
         self.strafe_z = 0
-        # Current (x, y, z) position in the world, specified with floats. Note
-        # that, perhaps unlike in math class, the y-axis is the vertical axis.
-        self.position = (0, 5, 0)
         # First element is rotation of the player in the x-z plane (ground
         # plane) measured from the z-axis down. The second is the rotation
         # angle from the ground plane up. Rotation is in degrees.
@@ -40,24 +38,17 @@ class Player(WorldObject):
         # The vertical plane rotation ranges from -90 (looking straight down) to
         # 90 (looking straight up). The horizontal rotation range is unbounded.
         self.rotation = (0, 0)
-        # Velocity in the y (upward) direction.
-        self.dy = 0
+
         # A list of blocks the player can place. Hit num keys to cycle.
         self.inventory = [Brick, Grass, Sand, WeakStone, Water]
         # The current block the user can place. Hit num keys to cycle.
         self.block = self.inventory[0]
 
         # General Configuration
-
-        # gravity
-        self.gravity = config["gravity"]
         # speed
-        self.walking_speed = config["walking_speed"]
         self.flying_speed = config["flying_speed"]
         # player height
         self.player_height = config["player_height"]
-        # terminal velocity
-        self.terminal_velocity = config["terminal_velocity"]
 
         # To derive the formula for calculating jump speed, first solve
         #    v_t = v_0 + a * t
