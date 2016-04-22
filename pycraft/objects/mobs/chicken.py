@@ -15,6 +15,6 @@ class Chicken(Mob):
     breakable = True
     texture_path = 'pycraft/objects/texture/water.jpg'
 
-    def __init__(self):
-        super(Chicken, self).__init__()
+    def __init__(self, config, position):
+        super(Chicken, self).__init__(config, position)
         self.name = '{}_{}'.format(self.identifier, random.randint(1, 100))

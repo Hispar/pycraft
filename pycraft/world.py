@@ -113,7 +113,7 @@ class World:
                         self.add_block((x, y_lvl, z), block, immediate=False)
 
     def _initialize_mobs(self):
-        mob = Chicken()
+        mob = Chicken(self.config, (10, 3, 0))
         self.mobs[mob.name] = mob
         self.sectors.setdefault(sectorize(mob.position), []).append(mob.position)
 
