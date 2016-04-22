@@ -1,5 +1,6 @@
 # python imports
 import math
+import operator
 
 # project imports
 from pycraft.objects.object import WorldObject
@@ -161,22 +162,22 @@ class Character(WorldObject):
                     continue
                 # How much overlap you have with this dimension.
                 d = (p[i] - np[i]) * face[i]
-                # print(p)
-                # print(np)
-                # print(face)
-                # import operator
-                # tuple(map(operator.add, a, b))
-                # print(x)
-                # exit()
-                if d < pad:
+                if d == 0:
                     continue
+
+                collision_position = tuple(map(operator.add, np, face))
+                if collision_position not in objects:
+                    continue
+                if d < objects[collision_position].pad:
+                    continue
+
                 for dy in range(height):  # check each height
                     op = list(np)
                     op[1] -= dy
                     op[i] += face[i]
                     if tuple(op) not in objects:
                         continue
-                    p[i] -= (d - pad) * face[i]
+                    p[i] -= (d - objects[tuple(op)].pad) * face[i]
                     if face == (0, -1, 0) or face == (0, 1, 0):
                         # You are colliding with the ground or ceiling, so stop
                         # falling / rising.
