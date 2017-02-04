@@ -5,14 +5,14 @@ import sys
 from .object import WorldObject
 from .textures import tex_coords
 
-GRASS = tex_coords((1, 0), (0, 1), (0, 0))
+GRASS = tex_coords((0, 1), (1, 0), (0, 0))
 SAND = tex_coords((1, 1), (1, 1), (1, 1))
-BRICK = tex_coords((2, 0), (2, 0), (2, 0))
+BRICK = tex_coords((0, 0), (0, 0), (0, 0))
 STONE = tex_coords((2, 1), (2, 1), (2, 1))
 
 
 class Block(WorldObject):
-    texture_path = 'pycraft/objects/textures.png'
+    texture_path = 'pycraft/textures/textures.png'
     durability = 1
 
     def __init__(self):
@@ -34,6 +34,7 @@ def get_block(identifier):
 
 
 class Brick(Block):
+    texture_path = 'pycraft/textures/brick.png'
     identifier = 'Brick'
     texture = BRICK
     breakable = True
@@ -41,6 +42,7 @@ class Brick(Block):
 
 
 class Grass(Block):
+    texture_path = 'pycraft/textures/grass.png'
     identifier = 'Grass'
     texture = GRASS
     breakable = True
@@ -48,6 +50,7 @@ class Grass(Block):
 
 
 class Sand(Block):
+    texture_path = 'pycraft/textures/sand.png'
     identifier = 'Sand'
     texture = SAND
     breakable = True

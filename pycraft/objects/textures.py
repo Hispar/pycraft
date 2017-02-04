@@ -1,5 +1,5 @@
 
-def tex_coord(x, y, n=4):
+def tex_coord(x, y, n=2):
     m = 1.0 / n
     dx = x * m
     dy = y * m

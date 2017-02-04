@@ -1,5 +1,4 @@
 from pycraft.gamestate import GameState
-from pycraft.world.sector import Sector
 from pycraft.world.world import World
 from pycraft.objects.player import Player
 from pycraft.objects.block import get_block
