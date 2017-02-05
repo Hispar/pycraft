@@ -36,7 +36,7 @@ class GameStateRunning(GameState):
 
     def on_mouse_press(self, x, y, button, modifiers):
         vector = self.player.get_sight_vector()
-        block, previous = self.world.area.hit_test(self.player.position, vector)
+        coords, previous = self.world.area.hit_test(self.player.position, vector)
         if (button == mouse.RIGHT) or \
                 ((button == mouse.LEFT) and (modifiers & key.MOD_CTRL)):
             # ON OSX, control + left click = right click.
@@ -47,10 +47,11 @@ class GameStateRunning(GameState):
                 if self.player.current_item:
                     self.world.add_block(previous, get_block(self.player.get_block()))
 
-        elif button == pyglet.window.mouse.LEFT and block:
-            texture = self.world.area.get_block(block)
-            if texture.hit_and_destroy():
-                self.world.remove_block(block)
+        elif button == pyglet.window.mouse.LEFT and coords:
+            block = self.world.area.get_block(coords)
+            self.world.remove_block(coords)
+            if not block.hit_and_destroy():
+                self.world.add_block(coords, block)
 
     def on_mouse_motion(self, x, y, dx, dy):
         m = 0.15

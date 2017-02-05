@@ -1,4 +1,8 @@
-from .block import Brick, Grass, Sand, Stone, WeakStone
+from pycraft.objects.blocks.brick import Brick
+from pycraft.objects.blocks.grass import Grass
+from pycraft.objects.blocks.sand import Sand
+from pycraft.objects.blocks.stone import Stone
+from pycraft.objects.blocks.weakstone import WeakStone
 
 brick = Brick()
 grass = Grass()
