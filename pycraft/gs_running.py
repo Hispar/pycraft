@@ -111,6 +111,7 @@ class GameStateRunning(GameState):
         GL.glColor3d(1, 1, 1)
         self.world.start_shader()
         self.world.batch.draw()
+        self.world.items.draw()
         self.world.stop_shader()
         self.draw_focused_block()
         self.set_2d(size)

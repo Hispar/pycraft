@@ -6,6 +6,7 @@ from pyglet import image
 from pyglet.gl import GL_QUADS
 from pyglet.graphics import Batch, TextureGroup
 
+from pycraft.objects.tree import Tree
 from pycraft.shader import Shader
 from pycraft.util import cube_vertices, cube_shade
 from pycraft.world.area import Area
@@ -28,6 +29,7 @@ class World:
     def __init__(self):
         # A Batch is a collection of vertex lists for batched rendering.
         self.batch = Batch()
+        self.items = Batch()
         # A TextureGroup manages an OpenGL texture.
         self.texture_group = {}
         # Mapping from position to a pyglet `VertextList` for all shown blocks.
@@ -45,6 +47,9 @@ class World:
         PycraftOpenGL()
 
         self.init_shader()
+
+        tree = Tree()
+        tree.render((5, 5, 5), self.items)
 
         # A mapping from position to the texture of the block at that position.
         # This defines all the blocks that are currently in the world.
