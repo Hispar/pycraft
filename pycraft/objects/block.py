@@ -26,10 +26,7 @@ class Block(WorldObject):
 
 def get_block(identifier):
     try:
-        classname = getattr(importlib.import_module("pycraft.objects.blocks." + identifier.lower()), identifier)
+        classname = getattr(importlib.import_module("pycraft.objects.blocks"), identifier)
         return classname()
     except KeyError:
         sys.exit('Exiting! Class {} can\'t be instanciated'.format(identifier))
-
-
-
