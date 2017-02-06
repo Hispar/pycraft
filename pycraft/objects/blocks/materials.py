@@ -1,12 +1,13 @@
 from pycraft.objects.block import Block
 from pycraft.objects.textures import tex_coords
 
-BRICK = tex_coords((0, 0, 2), (0, 0), (0, 0))
-BRICK2 = tex_coords((0, 1, 2), (0, 1), (0, 1))
-BRICK3 = tex_coords((1, 0, 2), (1, 0), (1, 0))
-GRASS = tex_coords((0, 1, 2), (1, 0), (0, 0))
-SAND = tex_coords((1, 1, 1), (1, 1), (1, 1))
-STONE = tex_coords((2, 1, 1), (2, 1), (2, 1))
+BRICK = tex_coords((0, 0, 2), (0, 0, 2), (0, 0, 2))
+BRICK2 = tex_coords((0, 1, 2), (0, 1, 2), (0, 1, 2))
+BRICK3 = tex_coords((1, 0, 2), (1, 0, 2), (1, 0, 2))
+GRASS = tex_coords((0, 1, 2), (1, 0, 2), (0, 0, 2))
+SAND = tex_coords((1, 1, 1), (1, 1, 1), (1, 1, 1))
+STONE = tex_coords((2, 1, 1), (2, 1, 1), (2, 1, 1))
+GRANITE = tex_coords((0, 0, 1), (0, 0, 1), (0, 0, 1))
 
 
 class Brick(Block):
@@ -49,5 +50,13 @@ class WeakStone(Block):
     texture_path = 'pycraft/textures/stone.png'
     identifier = 'WeakStone'
     texture = STONE
+    breakable = True
+    durability = 15
+
+
+class Granite(Block):
+    texture_path = 'pycraft/textures/granite.png'
+    identifier = 'Granite'
+    texture = GRANITE
     breakable = True
     durability = 15
