@@ -17,6 +17,7 @@ class Player(Character):
         self.inventory.store_item(1, 'Grass', 7)
         self.inventory.store_item(2, 'WeakStone', 10)
         self.inventory.store_item(3, 'Sand', 5)
+        self.inventory.store_item(4, 'Granite', 5)
 
         self.current_item = 'Brick'
         self.current_item_index = 0
