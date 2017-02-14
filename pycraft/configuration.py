@@ -4,7 +4,6 @@ import json
 import collections
 from pyglet.window import key
 
-
 """
     The configuration file will be stored as a json file
 
@@ -62,6 +61,8 @@ class ConfigurationLoader:
                 "terminal_velocity": 50,
                 "walking_speed": 5,
                 "flying_speed": 15,
+                "sector_size": 10,
+                "sectors_per_side": 10
             }
         }
 

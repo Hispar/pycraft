@@ -2,6 +2,7 @@ import time
 from collections import OrderedDict
 
 from noise.perlin import SimplexNoise
+from noise import snoise2
 from pyglet import image
 from pyglet.gl import GL_QUADS
 from pyglet.graphics import Batch, TextureGroup
@@ -14,18 +15,11 @@ from pycraft.world.sector import Sector
 
 simplex_noise2 = SimplexNoise(256).noise2
 
-FACES = [
-    (0, 1, 0),
-    (0, -1, 0),
-    (-1, 0, 0),
-    (1, 0, 0),
-    (0, 0, 1),
-    (0, 0, -1),
-]
-
 
 class World:
-    def __init__(self):
+    def __init__(self, config):
+        # general world configuration
+        self.config = config
         # A Batch is a collection of vertex lists for batched rendering.
         self.batch = Batch()
         # A TextureGroup manages an OpenGL texture.
@@ -49,6 +43,12 @@ class World:
         # A mapping from position to the texture of the block at that position.
         # This defines all the blocks that are currently in the world.
         self.area = Area()
+
+    def create_world(self):
+        for x in range(0, self.config['sectors_per_side']):
+            for y in range(0, self.config['sectors_per_side']):
+                # TODO : create Sector
+                print(int(simplex_noise2(x, y) * 10))
 
     def add_block(self, coords, block, immediate=True):
         """Add a block with the given `texture` and `position` to the world.
