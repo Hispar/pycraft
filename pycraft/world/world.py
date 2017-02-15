@@ -197,6 +197,7 @@ class World:
         self.shader.unbind()
 
     def add_sector(self, coords):
+        # TODO : convert Sector in a factory to get diferent sectors types
         sector = Sector(coords)
         self.area.add_blocks(sector.get_blocks())
         self.sector = coords
