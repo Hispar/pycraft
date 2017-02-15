@@ -1,8 +1,6 @@
 import time
 from collections import OrderedDict
 
-from noise.perlin import SimplexNoise
-from noise import snoise2
 from pyglet import image
 from pyglet.gl import GL_QUADS
 from pyglet.graphics import Batch, TextureGroup
@@ -12,8 +10,6 @@ from pycraft.util import cube_vertices, cube_shade
 from pycraft.world.area import Area
 from pycraft.world.opengl import PycraftOpenGL
 from pycraft.world.sector import Sector
-
-simplex_noise2 = SimplexNoise(256).noise2
 
 
 class World:
@@ -216,9 +212,9 @@ class World:
             for position in sector.blocks:
                 if position not in self.shown and self.area.exposed(position):
                     self.show_block(position, immediate)
-        # else:
-        #     self.add_sector(coords)
-        #     self.show_sector(coords)
+                    # else:
+                    #     self.add_sector(coords)
+                    #     self.show_sector(coords)
 
     def hide_sector(self, coords):
         """Ensure all blocks in the given sector that should be hidden are
