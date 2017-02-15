@@ -45,10 +45,14 @@ class World:
         self.area = Area()
 
     def create_world(self):
-        for x in range(0, self.config['sectors_per_side']):
-            for y in range(0, self.config['sectors_per_side']):
-                # TODO : create Sector
-                print(int(simplex_noise2(x, y) * 10))
+        """
+        Create Initial world
+        :return:
+        """
+        side = int(self.config['sectors_per_side'] / 2)
+        for x in range(-side, side):
+            for z in range(-side, side):
+                self.add_sector((x, 0, z))
 
     def add_block(self, coords, block, immediate=True):
         """Add a block with the given `texture` and `position` to the world.
@@ -157,7 +161,9 @@ class World:
         coords, show = self.show_hide_queue.popitem(last=False)
         shown = coords in self._shown
         if show and not shown:
-            self._show_block(coords, self.area.get_block(coords))
+            block = self.area.get_block(coords)
+            if block:
+                self._show_block(coords, block)
         elif shown and not show:
             self._hide_block(coords)
 
@@ -194,7 +200,9 @@ class World:
     def stop_shader(self):
         self.shader.unbind()
 
-    def add_sector(self, sector, coords):
+    def add_sector(self, coords):
+        sector = Sector(coords)
+        self.area.add_blocks(sector.get_blocks())
         self.sector = coords
         self.sectors[coords] = sector
         # self.sectors.setdefault(coords, []).append(sector)
@@ -208,61 +216,30 @@ class World:
             for position in sector.blocks:
                 if position not in self.shown and self.area.exposed(position):
                     self.show_block(position, immediate)
-        else:
-            sector = Sector(coords, self.area)
-            self.add_sector(sector, coords)
-            self.show_sector(coords)
+        # else:
+        #     self.add_sector(coords)
+        #     self.show_sector(coords)
 
     def hide_sector(self, coords):
         """Ensure all blocks in the given sector that should be hidden are
         removed from the canvas.
         """
         sector = self.sectors.get(coords)
-        for position in sector.blocks:
-            if position in self.shown:
-                self.hide_block(position, False)
+        if sector:
+            for position in sector.blocks:
+                if position in self.shown:
+                    self.hide_block(position, False)
 
-    def change_sectors(self, before, after):
-        """Move from sector `before` to sector `after`. A sector is a
+    def change_sectors(self, after, pad=4):
+        """Move to sector `after`. A sector is a
         contiguous x, y sub-region of world. Sectors are used to speed up
         world rendering.
         """
-        before_set = set()
-        after_set = set()
-        pad = 4
-        if not before:
-            self.initial_sector(after)
         for dx in range(-pad, pad + 1):
             for dy in [0]:  # range(-pad, pad + 1):
                 for dz in range(-pad, pad + 1):
                     if dx ** 2 + dy ** 2 + dz ** 2 > (pad + 1) ** 2:
                         continue
-                    if before:
-                        x, y, z = before
-                        before_set.add((x + dx, y + dy, z + dz))
                     if after:
                         x, y, z = after
-                        after_set.add((x + dx, y + dy, z + dz))
-        show = after_set - before_set
-        hide = before_set - after_set
-        for coords in hide:
-            self.hide_sector(coords)
-        for coords in show:
-            self.show_sector(coords)
-
-    def initial_sector(self, coords):
-        """
-        Creates initial sectors in spiral, to speed up rendering in front of the player
-        :param coords:
-        :return:
-        """
-        x, y = 0, 0
-        dx, dy = 0, -1
-        X = coords[0] + 4
-        Y = coords[2] + 4
-        for i in range(max(X, Y) ** 2):
-            if (-X / 2 < x <= X / 2) and (-Y / 2 < y <= Y / 2):
-                self.show_sector((x, coords[1], y))
-            if x == y or (x < 0 and x == -y) or (x > 0 and x == 1 - y):
-                dx, dy = -dy, dx  # Corner change direction
-            x, y = x + dx, y + dy
+                        self.show_sector((x + dx, y + dy, z + dz))

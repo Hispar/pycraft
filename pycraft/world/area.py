@@ -19,6 +19,15 @@ class Area:
     def get_blocks(self):
         return self.blocks
 
+    def add_blocks(self, blocks):
+        """
+        Add blocks in batch
+        :param blocks:
+        :return:
+        """
+        for coord, block in blocks.items():
+            self.add_block(coord, block)
+
     def add_block(self, coords, block):
         """
         Add a block element to blocks list
@@ -54,7 +63,7 @@ class Area:
         coords : tuple of len 3
             The (x, y, z) position of the block to show.
         """
-        return self.blocks[coords] if self.blocks[coords] else None
+        return self.blocks[coords] if coords in self.blocks else None
 
     def exposed(self, position):
         """Returns False is given `position` is surrounded on all 6 sides by

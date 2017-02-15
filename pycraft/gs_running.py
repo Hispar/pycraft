@@ -148,7 +148,7 @@ class GameStateRunning(GameState):
         self.world.process_queue(ticks_per_second)
         sector = sectorize(self.player.position)
         if sector != self.world.sector:
-            self.world.change_sectors(self.world.sector, sector)
+            self.world.change_sectors(sector)
             if self.world.sector is None:
                 self.world.process_entire_queue()
             self.world.sector = sector

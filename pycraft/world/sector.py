@@ -7,13 +7,15 @@ simplex_noise2 = SimplexNoise(256).noise2
 
 
 class Sector:
-    def __init__(self, coords, area):
-        self.area = area
+    def __init__(self, coords):
         # A mapping from position to the texture of the block at that position.
         # This defines all the blocks that are currently in the sector.
         self.blocks = {}
 
         self.generate_sector(coords)
+
+    def get_blocks(self):
+        return self.blocks
 
     def add_block(self, coords, block):
         """Add a block with the given `texture` and `position` to the world.
@@ -26,7 +28,6 @@ class Sector:
             The coordinates of the texture squares. Use `tex_coords()` to
             generate.
         """
-        self.area.add_block(coords, block)
         if coords in self.blocks:
             self.remove_block(coords)
         self.blocks[coords] = block
@@ -53,4 +54,4 @@ class Sector:
                 self.add_block((x, y_lvl, z), Grass())
             # add the safety stone floor.
             # don't want anyone falling into the ether.
-            self.add_block((x, 0 - 3, z), Stone())
+            self.add_block((x, -3, z), Stone())
