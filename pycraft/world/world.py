@@ -50,6 +50,26 @@ class World:
         # This defines all the blocks that are currently in the world.
         self.area = Area()
 
+    def create_sectors(self, coords):
+        """
+        Creates initial sectors in spiral, to speed up rendering in front of
+        the player
+        :param coords:
+        :return:
+        """
+        x, y = 0, 0
+        dx, dy = 0, -1
+        max_x, max_y = coords[0] + 4, coords[2] + 4
+        for i in range(max(max_x, max_y) ** 2):
+            if (-max_x / 2 < x <= max_x / 2) and (-max_y / 2 < y <= max_y / 2):
+                self.show_sector((x, coords[1], y), False)
+            if x == y or (x < 0 and x == -y) or (x > 0 and x == 1 - y):
+                dx, dy = -dy, dx  # Corner change direction
+            x, y = x + dx, y + dy
+
+    def get_blocks(self):
+        return self.area.get_blocks()
+
     def add_block(self, coords, block, immediate=True):
         """Add a block with the given `texture` and `position` to the world.
 
@@ -64,7 +84,6 @@ class World:
             Whether or not to draw the block immediately.
         """
         self.area.add_block(coords, block)
-        # self.sectors.setdefault(sectorize(position), []).append(position)
         if immediate:
             if self.area.exposed(coords):
                 self.show_block(coords, block, immediate)
@@ -127,7 +146,8 @@ class World:
         shade_data = cube_shade(1, 1, 1, 1)
         texture_data = block.texture
         if block.identifier not in self.texture_group:
-            self.texture_group[block.identifier] = TextureGroup(image.load(block.texture_path).get_texture())
+            self.texture_group[block.identifier] = TextureGroup(
+                image.load(block.texture_path).get_texture())
         self._shown[coords] = self.batch.add(
             24, GL_QUADS, self.texture_group[block.identifier],
             ('v3f/static', vertex_data),
@@ -218,6 +238,8 @@ class World:
         removed from the canvas.
         """
         sector = self.sectors.get(coords)
+        if not sector:
+            return
         for position in sector.blocks:
             if position in self.shown:
                 self.hide_block(position, False)
@@ -230,8 +252,6 @@ class World:
         before_set = set()
         after_set = set()
         pad = 4
-        if not before:
-            self.initial_sector(after)
         for dx in range(-pad, pad + 1):
             for dy in [0]:  # range(-pad, pad + 1):
                 for dz in range(-pad, pad + 1):
@@ -249,20 +269,3 @@ class World:
             self.hide_sector(coords)
         for coords in show:
             self.show_sector(coords)
-
-    def initial_sector(self, coords):
-        """
-        Creates initial sectors in spiral, to speed up rendering in front of the player
-        :param coords:
-        :return:
-        """
-        x, y = 0, 0
-        dx, dy = 0, -1
-        X = coords[0] + 4
-        Y = coords[2] + 4
-        for i in range(max(X, Y) ** 2):
-            if (-X / 2 < x <= X / 2) and (-Y / 2 < y <= Y / 2):
-                self.show_sector((x, coords[1], y))
-            if x == y or (x < 0 and x == -y) or (x > 0 and x == 1 - y):
-                dx, dy = -dy, dx  # Corner change direction
-            x, y = x + dx, y + dy

@@ -1,10 +1,10 @@
-from pycraft.gamestate import GameState
+from pycraft.gamestates.gamestate import GameState
 from pycraft.world.world import World
 from pycraft.objects.player import Player
 from pycraft.objects.block import get_block
 from pyglet.window import key, mouse
 import pyglet.graphics
-from pycraft.util import sectorize, cube_vertices, normalize
+from pycraft.util import sectorize, cube_vertices
 import pyglet.window
 import pyglet.gl as GL
 import math
@@ -34,16 +34,20 @@ class GameStateRunning(GameState):
             x=width - 10, y=10, anchor_x='right', anchor_y='bottom',
             color=(0, 0, 0, 255))
 
+        self.world.create_sectors(self.player.position)
+
     def on_mouse_press(self, x, y, button, modifiers):
         if (button == mouse.RIGHT) or \
                 ((button == mouse.LEFT) and (modifiers & key.MOD_CTRL)):
-            block, previous = self.player.hit(self.world.area.blocks, left=False)
+            block, previous = self.player.hit(self.world.get_blocks(),
+                                              left=False)
             # ON OSX, control + left click = right click.
             if block and self.player.current_item:
-                self.world.add_block(previous, get_block(self.player.get_block()))
+                self.world.add_block(previous,
+                                     get_block(self.player.get_block()))
 
         elif button == mouse.LEFT:
-            block = self.player.hit(self.world.area.blocks)[0]
+            block = self.player.hit(self.world.get_blocks())[0]
             if block:
                 texture = self.world.area.get_block(block)
                 if texture.hit_and_destroy():
@@ -125,7 +129,8 @@ class GameStateRunning(GameState):
         GL.glLoadIdentity()
         x, y = self.player.rotation
         GL.glRotatef(x, 0, 1, 0)
-        GL.glRotatef(-y, math.cos(math.radians(x)), 0, math.sin(math.radians(x)))
+        GL.glRotatef(-y, math.cos(math.radians(x)), 0,
+                     math.sin(math.radians(x)))
         x, y, z = self.player.position
         GL.glTranslatef(-x, -y, -z)
 
@@ -151,13 +156,13 @@ class GameStateRunning(GameState):
         m = 8
         dt = min(dt, 0.2)
         for _ in range(m):
-            self.player.update(dt / m, self.world.area.get_blocks())
+            self.player.update(dt / m, self.world.get_blocks())
 
     def draw_focused_block(self):
         """Draw black edges around the block that is currently under the
         crosshairs.
         """
-        block = self.player.hit(self.world.area.blocks)[0]
+        block = self.player.hit(self.world.get_blocks())[0]
         if block:
             x, y, z = block
             vertex_data = cube_vertices(x, y, z, 0.51)
@@ -171,7 +176,7 @@ class GameStateRunning(GameState):
         x, y, z = self.player.position
         self.game_info_label.text = '%02d (%.2f, %.2f, %.2f) %d / %d' % (
             pyglet.clock.get_fps(), x, y, z,
-            len(self.world._shown), len(self.world.area.get_blocks()))
+            len(self.world._shown), len(self.world.get_blocks()))
         self.game_info_label.draw()
         self.current_item_label.text = self.player.current_item if self.player.current_item else "No items in this inventory"
         self.current_item_label.draw()

@@ -1,32 +1,38 @@
 # 3rd party imports
 import pyglet.clock
 import pyglet.window
-from pyglet.window import key, mouse
+from pyglet.window import key
 
 from pycraft.configuration import ConfigurationLoader
-from pycraft.gamestate import GameStateManager, States
-from pycraft.gs_running import GameStateRunning
+from pycraft.gamestates.gamestate import GameStateManager
+from pycraft.gamestates.states.running import GameStateRunning
 
 
 class Window(pyglet.window.Window):
-    def __init__(self, ticks_ps, *args, **kwargs):
+    def __init__(self, config, *args, **kwargs):
         super(Window, self).__init__(*args, **kwargs)
-        self.ticks_per_second = ticks_ps
+        self.ticks_per_second = config["window"]["ticks_per_second"]
+        self.width = config["window"]["width"]
+        self.height = config["window"]["height"]
+        self.resizable = config["window"]["resizeable"]
+
         # Whether or not the window exclusively captures the mouse.
-        self.set_exclusive_mouse(False)
+        self.set_exclusive_mouse(config["window"]["exclusive_mouse"])
         # This call schedules the `update()` method to be called
         # ticks_per_second. This is the main game event loop.
-        pyglet.clock.schedule_interval(self.update, 1.0 / self.ticks_per_second)
+        pyglet.clock.schedule_interval(self.update,
+                                       1.0 / self.ticks_per_second)
         config_loader = ConfigurationLoader()
         self.config_data = config_loader.load_configuration_file()
 
         # Create the game state manager and set the first state
         self.gamestatemanager = GameStateManager()
         # This should be changed when we implement the MAINMENU game state
-        gs_running = GameStateRunning(self.config_data, height=self.height, width=self.width)
+        gs_running = GameStateRunning(self.config_data, height=self.height,
+                                      width=self.width)
         self.gamestatemanager.push(gs_running)
 
-    def set_exclusive_mouse(self, exclusive):
+    def set_exclusive_mouse(self, exclusive=True):
         """If `exclusive` is True, the game will capture the mouse, if False the
         game will ignore the mouse.
         """
@@ -51,7 +57,8 @@ class Window(pyglet.window.Window):
         """
 
         if self.exclusive:
-            self.gamestatemanager.peek().on_mouse_press(x, y, button, modifiers)
+            self.gamestatemanager.peek().on_mouse_press(x, y, button,
+                                                        modifiers)
         else:
             self.set_exclusive_mouse(True)
 
@@ -85,7 +92,9 @@ class Window(pyglet.window.Window):
         if symbol == key.ESCAPE:
             self.set_exclusive_mouse(False)
         else:
-            self.gamestatemanager.peek().on_key_press(symbol, modifiers, self.config_data["controls"])
+            self.gamestatemanager.peek().on_key_press(symbol, modifiers,
+                                                      self.config_data[
+                                                          "controls"])
 
     def on_key_release(self, symbol, modifiers):
         """Called when the player releases a key. See pyglet docs for key
@@ -100,7 +109,9 @@ class Window(pyglet.window.Window):
         config_data["controls"] : dict
             control map read by the configuration file
         """
-        self.gamestatemanager.peek().on_key_release(symbol, modifiers, self.config_data["controls"])
+        self.gamestatemanager.peek().on_key_release(symbol, modifiers,
+                                                    self.config_data[
+                                                        "controls"])
 
     def on_resize(self, width, height):
         """Called when the window is resized to a new `width` and `height`."""
