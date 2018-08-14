@@ -1,4 +1,3 @@
-from pycraft.gamestates.base import States
 from pycraft.gamestates.factory import GameStateFactory
 
 
@@ -18,7 +17,7 @@ class GameStateManager:
         self.factory = GameStateFactory(config)
 
     def create_state(self):
-        game_state = self.factory.getGameState(self.state)
+        game_state = self.factory.get_game_state(self.state)
         self.push(game_state)
 
     # TODO define a good way to map each possible game state
@@ -26,7 +25,6 @@ class GameStateManager:
         if not self.peek().active:
             self.state += 1
             self.create_state()
-
 
     def peek(self):
         return self.stack[len(self.stack) - 1]

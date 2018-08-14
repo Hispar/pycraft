@@ -4,21 +4,6 @@ from pycraft.gamestates.base import States
 from pycraft.gamestates.gamestate import GameState
 from pycraft.windows.interface.button import Button
 from pycraft.windows.interface.title import Title
-from pycraft.world.world import World
-from pycraft.objects.player import Player
-from pycraft.objects.block import get_block
-from pyglet.window import key, mouse
-import pyglet.graphics
-from pycraft.util import sectorize, cube_vertices
-import pyglet.window
-import pyglet.gl as GL
-import math
-
-# Convenience list of num keys.
-NUMERIC_KEYS = [
-    key._1, key._2, key._3, key._4, key._5,
-    key._6, key._7, key._8, key._9, key._0
-]
 
 
 class MainScreenState(GameState):

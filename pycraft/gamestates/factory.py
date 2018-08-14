@@ -9,9 +9,10 @@ class GameStateFactory:
         self.stack = list()
         self.config = config
 
-    def getGameState(self, state):
-        # if States(state) == States.MAIN_SCREEN:
-        #     pass
-        if States(state) == States.RUNNING:
-            return RunningState(self.config)
+    def get_game_state(self, state):
+        try:
+            if States(state) == States.RUNNING:
+                return RunningState(self.config)
+        except ValueError:
+            pass
         return MainScreenState(self.config)

@@ -18,25 +18,39 @@ NUMERIC_KEYS = [
 
 
 class RunningState(GameState):
-    def __init__(self, config, height, width):
+    def __init__(self, config):
         super(RunningState, self).__init__()
+        self.active = True
         self.state = States.RUNNING
         self.world = World()
         self.player = Player(config["world"])
+        self.width = config["window"]["width"]
+        self.height = config["window"]["height"]
 
         # The crosshairs at the center of the screen.
         self.reticle = None
         # The label that is displayed in the top left of the canvas.
         self.game_info_label = pyglet.text.Label(
             '', font_name='Arial', font_size=18,
-            x=10, y=height - 10, anchor_x='left', anchor_y='top',
+            x=10, y=self.height - 10, anchor_x='left', anchor_y='top',
             color=(0, 0, 0, 255))
         self.current_item_label = pyglet.text.Label(
             '', font_name='Arial', font_size=18,
-            x=width - 10, y=10, anchor_x='right', anchor_y='bottom',
+            x=self.width - 10, y=10, anchor_x='right', anchor_y='bottom',
             color=(0, 0, 0, 255))
 
         self.world.create_sectors(self.player.position)
+    #
+    # def get_vbox(self):
+    #     vbox = glooey.VBox()
+    #     vbox.alignment = 'center'
+    #
+    #     title = Title("Pycraft")
+    #     vbox.add(title)
+    #
+    #
+    #
+    #     return vbox
 
     def on_mouse_press(self, x, y, button, modifiers):
         if (button == mouse.RIGHT) or \
