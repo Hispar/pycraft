@@ -1,5 +1,6 @@
 import glooey
 
+from pycraft.gamestates.base import States
 from pycraft.gamestates.gamestate import GameState
 from pycraft.windows.interface.button import Button
 from pycraft.windows.interface.title import Title
@@ -21,8 +22,10 @@ NUMERIC_KEYS = [
 
 
 class MainScreenState(GameState):
-    def __init__(self, config, height, width):
+    def __init__(self, config):
         super(MainScreenState, self).__init__()
+        self.state = States.MAIN_SCREEN
+        self.active = True
 
     def get_vbox(self):
         vbox = glooey.VBox()
@@ -31,12 +34,25 @@ class MainScreenState(GameState):
         title = Title("Pycraft")
         vbox.add(title)
 
-        start = Button("Start Game", "Start.")
-        vbox.add(start)
-        start = Button("Resume Game", "Resume.")
+        start = Button("Start Game")
+        start.push_handlers(on_click=lambda w: self.start())
         vbox.add(start)
 
+        resume = Button("Resume Game")
+        resume.push_handlers(on_click=lambda w: self.resume())
+        vbox.add(resume)
+
         return vbox
+
+    def update(self, dt, ticks_per_second):
+        pass
+
+    def start(self):
+        self.active = False
+        print('start')
+
+    def resume(self):
+        print('resume')
 
     # def on_mouse_press(self, x, y, button, modifiers):
     #     if (button == mouse.RIGHT) or \
@@ -149,7 +165,7 @@ class MainScreenState(GameState):
     #
     # def update(self, dt, ticks_per_second):
     #     pass
-        # super(MainScreenState, self).update()
+    # super(MainScreenState, self).update()
     #     self.world.process_queue(ticks_per_second)
     #     sector = sectorize(self.player.position)
     #     if sector != self.world.sector:

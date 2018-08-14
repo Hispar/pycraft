@@ -23,17 +23,17 @@ class GameWindow(pyglet.window.Window):
         pyglet.clock.schedule_interval(self.update,
                                        1.0 / self.ticks_per_second)
 
-        self.manager = GameStateManager()
-        self.init_state()
+        self.manager = GameStateManager(config)
+        self.manager.create_state()
+        # self.init_state()
 
-    def init_state(self):
-        """Create the game state manager and set the first state"""
-        state = MainScreenState(self.config_data, height=self.height,
-                                width=self.width)
-        self.manager.push(state)
-        # This should be changed when we implement the MAINMENU game state
-        # gs_running = GameStateRunning(self.config_data, height=self.height,
-        #                               width=self.width)
+    # def init_state(self):
+    #     """Create the game state manager and set the first state"""
+    #     state = MainScreenState(self.config_data)
+    #     self.manager.push(state)
+    #     # This should be changed when we implement the MAINMENU game state
+    #     # gs_running = GameStateRunning(self.config_data, height=self.height,
+    #     #                               width=self.width)
 
     def get_vbox(self):
         return self.manager.peek().get_vbox()
@@ -135,5 +135,6 @@ class GameWindow(pyglet.window.Window):
             The change in time since the last call.
         ticks_per_second:
         """
-        # self.manager.peek().update(dt, self.ticks_per_second)
-        pass
+        self.manager.switch_game_state()
+        self.manager.peek().update(dt, self.ticks_per_second)
+        # pass

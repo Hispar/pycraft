@@ -19,16 +19,6 @@ class GameState:
     def on_draw(self, size):
         pass
 
-    """
-        Are those responsibilities of the Game State class?
-    """
-
-    def on_input(self):
-        pass
-
-    def on_click(self):
-        pass
-
     # --- ** ---
     # Methods related to the GameStateManager
     """

@@ -23,6 +23,6 @@ class Button(glooey.Button):
     # also implement new functionality.  Here we just print a programmed
     # response when the button is clicked.
 
-    def __init__(self, text, response):
-        super(Button, self).__init__(text)
-        self.response = response
+    # def __init__(self, text, response):
+    #     super(Button, self).__init__(text)
+    #     self.response = response

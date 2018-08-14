@@ -1,3 +1,7 @@
+from pycraft.gamestates.base import States
+from pycraft.gamestates.factory import GameStateFactory
+
+
 class GameStateManager:
     """
         Desirable option for game states switch - don't let this function for the
@@ -8,12 +12,21 @@ class GameStateManager:
         maps and option menus)
     """
 
-    def __init__(self):
+    def __init__(self, config):
         self.stack = list()
+        self.state = 1
+        self.factory = GameStateFactory(config)
+
+    def create_state(self):
+        game_state = self.factory.getGameState(self.state)
+        self.push(game_state)
 
     # TODO define a good way to map each possible game state
     def switch_game_state(self):
-        pass
+        if not self.peek().active:
+            self.state += 1
+            self.create_state()
+
 
     def peek(self):
         return self.stack[len(self.stack) - 1]

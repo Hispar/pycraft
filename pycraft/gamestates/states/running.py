@@ -1,3 +1,4 @@
+from pycraft.gamestates.base import States
 from pycraft.gamestates.gamestate import GameState
 from pycraft.world.world import World
 from pycraft.objects.player import Player
@@ -16,9 +17,10 @@ NUMERIC_KEYS = [
 ]
 
 
-class GameStateRunning(GameState):
+class RunningState(GameState):
     def __init__(self, config, height, width):
-        super(GameStateRunning, self).__init__()
+        super(RunningState, self).__init__()
+        self.state = States.RUNNING
         self.world = World()
         self.player = Player(config["world"])
 
