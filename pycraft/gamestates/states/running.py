@@ -1,5 +1,8 @@
+import glooey
+
 from pycraft.gamestates.base import States
 from pycraft.gamestates.gamestate import GameState
+from pycraft.windows.interface.title import Title
 from pycraft.world.world import World
 from pycraft.objects.player import Player
 from pycraft.objects.block import get_block
@@ -18,8 +21,11 @@ NUMERIC_KEYS = [
 
 
 class RunningState(GameState):
-    def __init__(self, config):
+    def __init__(self, gui, config):
         super(RunningState, self).__init__()
+        self.vbox = self.create_vbox()
+        self.gui = gui
+        self.gui.add(self.vbox)
         self.active = True
         self.state = States.RUNNING
         self.world = World()
@@ -40,17 +46,15 @@ class RunningState(GameState):
             color=(0, 0, 0, 255))
 
         self.world.create_sectors(self.player.position)
-    #
-    # def get_vbox(self):
-    #     vbox = glooey.VBox()
-    #     vbox.alignment = 'center'
-    #
-    #     title = Title("Pycraft")
-    #     vbox.add(title)
-    #
-    #
-    #
-    #     return vbox
+
+    def create_vbox(self):
+        vbox = glooey.VBox()
+        vbox.alignment = 'center'
+
+        title = Title("Pycraft")
+        vbox.add(title)
+
+        return vbox
 
     def on_mouse_press(self, x, y, button, modifiers):
         if (button == mouse.RIGHT) or \
@@ -129,6 +133,7 @@ class RunningState(GameState):
         self.world.batch.draw()
         self.world.stop_shader()
         self.draw_focused_block()
+
         self.set_2d(size)
         self.draw_labels()
         self.draw_reticle()

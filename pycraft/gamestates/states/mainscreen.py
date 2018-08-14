@@ -7,12 +7,15 @@ from pycraft.windows.interface.title import Title
 
 
 class MainScreenState(GameState):
-    def __init__(self, config):
+    def __init__(self, gui, config):
         super(MainScreenState, self).__init__()
         self.state = States.MAIN_SCREEN
         self.active = True
+        self.vbox = self.create_vbox()
+        self.gui = gui
+        self.gui.add(self.vbox)
 
-    def get_vbox(self):
+    def create_vbox(self):
         vbox = glooey.VBox()
         vbox.alignment = 'center'
 
@@ -34,6 +37,7 @@ class MainScreenState(GameState):
 
     def start(self):
         self.active = False
+        self.gui.remove(self.vbox)
         print('start')
 
     def resume(self):

@@ -1,4 +1,5 @@
 # 3rd party imports
+import glooey
 import pyglet.clock
 import pyglet.window
 
@@ -23,8 +24,10 @@ class GameWindow(pyglet.window.Window):
         pyglet.clock.schedule_interval(self.update,
                                        1.0 / self.ticks_per_second)
 
-        self.manager = GameStateManager(config)
+        gui = glooey.Gui(self)
+        self.manager = GameStateManager(gui, config)
         self.manager.create_state()
+
         # self.init_state()
 
     # def init_state(self):
@@ -35,8 +38,8 @@ class GameWindow(pyglet.window.Window):
     #     # gs_running = GameStateRunning(self.config_data, height=self.height,
     #     #                               width=self.width)
 
-    def get_vbox(self):
-        return self.manager.peek().get_vbox()
+    # def get_vbox(self):
+    #     return self.manager.peek().get_vbox()
 
     # def on_mouse_press(self, x, y, button, modifiers):
     #     """Called when a mouse button is pressed. See pyglet docs for button
@@ -121,9 +124,12 @@ class GameWindow(pyglet.window.Window):
 
             Pass the current window size
         """
-        pass
+        # vbox = self.get_vbox()
+        # self.gui.add(vbox)
+        # # pass
+
         # self.clear()
-        # self.manager.peek().on_draw(self.get_size())
+        self.manager.peek().on_draw(self.get_size())
 
     def update(self, dt):
         """This method is scheduled to be called repeatedly by the pyglet

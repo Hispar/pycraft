@@ -11,10 +11,10 @@ class GameStateManager:
         maps and option menus)
     """
 
-    def __init__(self, config):
+    def __init__(self, gui, config):
         self.stack = list()
         self.state = 1
-        self.factory = GameStateFactory(config)
+        self.factory = GameStateFactory(gui, config)
 
     def create_state(self):
         game_state = self.factory.get_game_state(self.state)

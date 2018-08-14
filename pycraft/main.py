@@ -1,4 +1,3 @@
-import glooey
 import pyglet.app
 
 from pycraft.configuration import ConfigurationLoader
@@ -13,8 +12,5 @@ def main():
     config_data = config_loader.load_configuration_file()
     config_loader.check_configuration()
 
-    game = GameWindow(config=config_data, caption=WINDOW_CAPTION)
-    gui = glooey.Gui(game)
-    vbox = game.get_vbox()
-    gui.add(vbox)
+    GameWindow(config=config_data, caption=WINDOW_CAPTION)
     pyglet.app.run()
