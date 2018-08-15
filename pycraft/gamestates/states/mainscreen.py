@@ -11,33 +11,33 @@ class MainScreenState(GameState):
         super(MainScreenState, self).__init__()
         self.state = States.MAIN_SCREEN
         self.active = True
-        self.vbox = self.create_vbox()
+        self.layout = self.create_layout()
         self.gui = gui
-        self.gui.add(self.vbox)
+        self.gui.add(self.layout)
 
-    def create_vbox(self):
-        vbox = glooey.VBox()
-        vbox.alignment = 'center'
+    def create_layout(self):
+        layout = glooey.VBox()
+        layout.alignment = 'center'
 
         title = Title("Pycraft")
-        vbox.add(title)
+        layout.add(title)
 
         start = Button("Start Game")
         start.push_handlers(on_click=lambda w: self.start())
-        vbox.add(start)
+        layout.add(start)
 
         resume = Button("Resume Game")
         resume.push_handlers(on_click=lambda w: self.resume())
-        vbox.add(resume)
+        layout.add(resume)
 
-        return vbox
+        return layout
 
     def update(self, dt, ticks_per_second):
         pass
 
     def start(self):
         self.active = False
-        self.gui.remove(self.vbox)
+        self.gui.remove(self.layout)
         print('start')
 
     def resume(self):
