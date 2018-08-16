@@ -1,10 +1,14 @@
-from pycraft.gamestate import GameState
+import glooey
+
+from pycraft.gamestates.base import States
+from pycraft.gamestates.gamestate import GameState
+from pycraft.windows.interface.title import Title
 from pycraft.world.world import World
 from pycraft.objects.player import Player
 from pycraft.objects.block import get_block
 from pyglet.window import key, mouse
 import pyglet.graphics
-from pycraft.util import sectorize, cube_vertices, normalize
+from pycraft.util import sectorize, cube_vertices
 import pyglet.window
 import pyglet.gl as GL
 import math
@@ -16,34 +20,55 @@ NUMERIC_KEYS = [
 ]
 
 
-class GameStateRunning(GameState):
-    def __init__(self, config, height, width):
-        super(GameStateRunning, self).__init__()
+class RunningState(GameState):
+    def __init__(self, gui, config):
+        super(RunningState, self).__init__()
+        self.layout = self.create_layout()
+        self.gui = gui
+        self.gui.add(self.layout)
+        self.active = True
+        self.state = States.RUNNING
         self.world = World()
         self.player = Player(config["world"])
+        self.width = config["window"]["width"]
+        self.height = config["window"]["height"]
 
         # The crosshairs at the center of the screen.
         self.reticle = None
-        # The label that is displayed in the top left of the canvas.
-        self.game_info_label = pyglet.text.Label(
-            '', font_name='Arial', font_size=18,
-            x=10, y=height - 10, anchor_x='left', anchor_y='top',
-            color=(0, 0, 0, 255))
-        self.current_item_label = pyglet.text.Label(
-            '', font_name='Arial', font_size=18,
-            x=width - 10, y=10, anchor_x='right', anchor_y='bottom',
-            color=(0, 0, 0, 255))
+        # # The label that is displayed in the top left of the canvas.
+        # self.game_info_label = pyglet.text.Label(
+        #     '', font_name='Arial', font_size=18,
+        #     x=10, y=self.height - 10, anchor_x='left', anchor_y='top',
+        #     color=(0, 0, 0, 255))
+        # self.current_item_label = pyglet.text.Label(
+        #     '', font_name='Arial', font_size=18,
+        #     x=self.width - 10, y=10, anchor_x='right', anchor_y='bottom',
+        #     color=(0, 0, 0, 255))
+
+        self.world.create_sectors(self.player.position)
+
+    def create_layout(self):
+        layout = glooey.Grid()
+        title = Title("Py")
+        title.set_alignment('top right')
+
+        self.title = title
+        layout.add(0, 1, title)
+
+        return layout
 
     def on_mouse_press(self, x, y, button, modifiers):
         if (button == mouse.RIGHT) or \
                 ((button == mouse.LEFT) and (modifiers & key.MOD_CTRL)):
-            block, previous = self.player.hit(self.world.area.blocks, left=False)
+            block, previous = self.player.hit(self.world.get_blocks(),
+                                              left=False)
             # ON OSX, control + left click = right click.
             if block and self.player.current_item:
-                self.world.add_block(previous, get_block(self.player.get_block()))
+                self.world.add_block(previous,
+                                     get_block(self.player.get_block()))
 
         elif button == mouse.LEFT:
-            block = self.player.hit(self.world.area.blocks)[0]
+            block = self.player.hit(self.world.get_blocks())[0]
             if block:
                 texture = self.world.area.get_block(block)
                 if texture.hit_and_destroy():
@@ -90,8 +115,8 @@ class GameStateRunning(GameState):
 
     def on_resize(self, width, height):
         # label
-        self.game_info_label.y = height - 10
-        self.current_item_label.x = width - 10
+        # self.game_info_label.y = height - 10
+        # self.current_item_label.x = width - 10
         # reticle
         if self.reticle:
             self.reticle.delete()
@@ -109,6 +134,7 @@ class GameStateRunning(GameState):
         self.world.batch.draw()
         self.world.stop_shader()
         self.draw_focused_block()
+
         self.set_2d(size)
         self.draw_labels()
         self.draw_reticle()
@@ -125,7 +151,8 @@ class GameStateRunning(GameState):
         GL.glLoadIdentity()
         x, y = self.player.rotation
         GL.glRotatef(x, 0, 1, 0)
-        GL.glRotatef(-y, math.cos(math.radians(x)), 0, math.sin(math.radians(x)))
+        GL.glRotatef(-y, math.cos(math.radians(x)), 0,
+                     math.sin(math.radians(x)))
         x, y, z = self.player.position
         GL.glTranslatef(-x, -y, -z)
 
@@ -151,13 +178,13 @@ class GameStateRunning(GameState):
         m = 8
         dt = min(dt, 0.2)
         for _ in range(m):
-            self.player.update(dt / m, self.world.area.get_blocks())
+            self.player.update(dt / m, self.world.get_blocks())
 
     def draw_focused_block(self):
         """Draw black edges around the block that is currently under the
         crosshairs.
         """
-        block = self.player.hit(self.world.area.blocks)[0]
+        block = self.player.hit(self.world.get_blocks())[0]
         if block:
             x, y, z = block
             vertex_data = cube_vertices(x, y, z, 0.51)
@@ -169,14 +196,17 @@ class GameStateRunning(GameState):
     def draw_labels(self):
         """Draw the label in the top left of the screen."""
         x, y, z = self.player.position
-        self.game_info_label.text = '%02d (%.2f, %.2f, %.2f) %d / %d' % (
-            pyglet.clock.get_fps(), x, y, z,
-            len(self.world._shown), len(self.world.area.get_blocks()))
-        self.game_info_label.draw()
-        self.current_item_label.text = self.player.current_item if self.player.current_item else "No items in this inventory"
-        self.current_item_label.draw()
+        self.title.set_text('%02d (%.2f, %.2f, %.2f)' % (
+            pyglet.clock.get_fps(), x, y, z))
+        # self.game_info_label.text = '%02d (%.2f, %.2f, %.2f) %d / %d' % (
+        #     pyglet.clock.get_fps(), x, y, z,
+        #     len(self.world._shown), len(self.world.get_blocks()))
+        # self.game_info_label.draw()
+        # self.current_item_label.text = self.player.current_item if self.player.current_item else "No items in this inventory"
+        # self.current_item_label.draw()
 
     def draw_reticle(self):
         """Draw the crosshairs in the center of the screen."""
         GL.glColor3d(0, 0, 0)
-        self.reticle.draw(GL.GL_LINES)
+        if self.reticle:
+            self.reticle.draw(GL.GL_LINES)
