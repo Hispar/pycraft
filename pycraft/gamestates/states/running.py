@@ -3,6 +3,7 @@ import glooey
 from pycraft.gamestates.base import States
 from pycraft.gamestates.gamestate import GameState
 from pycraft.windows.interface.title import Title
+from pycraft.windows.layouts.running import RunningLayout
 from pycraft.world.world import World
 from pycraft.objects.player import Player
 from pycraft.objects.block import get_block
@@ -23,11 +24,8 @@ NUMERIC_KEYS = [
 class RunningState(GameState):
     def __init__(self, gui, config):
         super(RunningState, self).__init__()
-        self.layout = self.create_layout()
-        self.gui = gui
-        self.gui.add(self.layout)
-        self.active = True
         self.state = States.RUNNING
+        self.active = True
         self.world = World()
         self.player = Player(config["world"])
         self.width = config["window"]["width"]
@@ -35,27 +33,13 @@ class RunningState(GameState):
 
         # The crosshairs at the center of the screen.
         self.reticle = None
-        # # The label that is displayed in the top left of the canvas.
-        # self.game_info_label = pyglet.text.Label(
-        #     '', font_name='Arial', font_size=18,
-        #     x=10, y=self.height - 10, anchor_x='left', anchor_y='top',
-        #     color=(0, 0, 0, 255))
-        # self.current_item_label = pyglet.text.Label(
-        #     '', font_name='Arial', font_size=18,
-        #     x=self.width - 10, y=10, anchor_x='right', anchor_y='bottom',
-        #     color=(0, 0, 0, 255))
-
         self.world.create_sectors(self.player.position)
+        self._init_gui(gui)
 
-    def create_layout(self):
-        layout = glooey.Grid()
-        title = Title("Py")
-        title.set_alignment('top right')
-
-        self.title = title
-        layout.add(0, 1, title)
-
-        return layout
+    def _init_gui(self, gui):
+        self.layout = RunningLayout()
+        self.gui = gui
+        self.gui.add(self.layout.get_layout())
 
     def on_mouse_press(self, x, y, button, modifiers):
         if (button == mouse.RIGHT) or \
@@ -196,8 +180,10 @@ class RunningState(GameState):
     def draw_labels(self):
         """Draw the label in the top left of the screen."""
         x, y, z = self.player.position
-        self.title.set_text('%02d (%.2f, %.2f, %.2f)' % (
-            pyglet.clock.get_fps(), x, y, z))
+        self.layout.set_title(
+            '{:2d} ({:.2f}, {:.2f}, {:.2f}) {:d} / {:d}'.format(
+                int(pyglet.clock.get_fps()), x, y, z,
+                len(self.world._shown), len(self.world.get_blocks())))
         # self.game_info_label.text = '%02d (%.2f, %.2f, %.2f) %d / %d' % (
         #     pyglet.clock.get_fps(), x, y, z,
         #     len(self.world._shown), len(self.world.get_blocks()))

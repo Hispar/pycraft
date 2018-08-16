@@ -18,7 +18,7 @@ class GameWindow(pyglet.window.Window):
 
         # Whether or not the window exclusively captures the mouse.
         self.exclusive = config["window"]["exclusive_mouse"]
-        # self.set_exclusive_mouse(config["window"]["exclusive_mouse"])
+        self.set_exclusive_mouse(config["window"]["exclusive_mouse"])
         # This call schedules the `update()` method to be called
         # ticks_per_second. This is the main game event loop.
         pyglet.clock.schedule_interval(self.update,
@@ -27,19 +27,6 @@ class GameWindow(pyglet.window.Window):
         gui = glooey.Gui(self)
         self.manager = GameStateManager(gui, config)
         self.manager.create_state()
-
-        # self.init_state()
-
-    # def init_state(self):
-    #     """Create the game state manager and set the first state"""
-    #     state = MainScreenState(self.config_data)
-    #     self.manager.push(state)
-    #     # This should be changed when we implement the MAINMENU game state
-    #     # gs_running = GameStateRunning(self.config_data, height=self.height,
-    #     #                               width=self.width)
-
-    # def get_vbox(self):
-    #     return self.manager.peek().get_vbox()
 
     # def on_mouse_press(self, x, y, button, modifiers):
     #     """Called when a mouse button is pressed. See pyglet docs for button
@@ -64,19 +51,19 @@ class GameWindow(pyglet.window.Window):
     #     else:
     #         self.set_exclusive_mouse(True)
     #
-    # def on_mouse_motion(self, x, y, dx, dy):
-    #     """Called when the player moves the mouse.
-    #
-    #     Parameters
-    #     ----------
-    #     x, y : int
-    #         The coordinates of the mouse click. Always center of the screen if
-    #         the mouse is captured.
-    #     dx, dy : float
-    #         The movement of the mouse.
-    #     """
-    #     if self.exclusive:
-    #         self.gamestatemanager.peek().on_mouse_motion(x, y, dx, dy)
+    def on_mouse_motion(self, x, y, dx, dy):
+        """Called when the player moves the mouse.
+
+        Parameters
+        ----------
+        x, y : int
+            The coordinates of the mouse click. Always center of the screen if
+            the mouse is captured.
+        dx, dy : float
+            The movement of the mouse.
+        """
+        if self.exclusive:
+            self.manager.peek().on_mouse_motion(x, y, dx, dy)
     #
     # def on_key_press(self, symbol, modifiers):
     #     """Called when the player presses a key. See pyglet docs for key
