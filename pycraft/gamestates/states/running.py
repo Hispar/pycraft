@@ -22,19 +22,22 @@ NUMERIC_KEYS = [
 
 
 class RunningState(GameState):
-    def __init__(self, gui, config):
+    def __init__(self, gui, config, world):
         super(RunningState, self).__init__()
         self.state = States.RUNNING
         self.active = True
-        self.world = World()
-        self.player = Player(config["world"])
+        self.world = world
+        # The crosshairs at the center of the screen.
+        self.reticle = None
+        self._init_gui(gui)
+
+        # Dimensions
         self.width = config["window"]["width"]
         self.height = config["window"]["height"]
 
-        # The crosshairs at the center of the screen.
-        self.reticle = None
+        self.world = World()
+        self.player = Player(config["world"])
         self.world.create_sectors(self.player.position)
-        self._init_gui(gui)
 
     def _init_gui(self, gui):
         self.layout = RunningLayout()
@@ -114,7 +117,7 @@ class RunningState(GameState):
     def on_draw(self, size):
         self.set_3d(size)
         GL.glColor3d(1, 1, 1)
-        # self.world.start_shader()
+        self.world.start_shader()
         self.world.batch.draw()
         self.world.stop_shader()
         self.draw_focused_block()

@@ -9,6 +9,7 @@ class MainScreenState(GameState):
         self.state = States.MAIN_SCREEN
         self.active = True
         self._init_gui(gui)
+        self.world = None
 
     def _init_gui(self, gui):
         self.layout = MainScreenLayout()

@@ -6,7 +6,6 @@ import json
 
 from pycraft.configuration import ConfigurationLoader
 
-
 DEFAULT_CONFIG = {
     "window": {
         "width": 800,
@@ -31,6 +30,8 @@ DEFAULT_CONFIG = {
         "terminal_velocity": 50,
         "walking_speed": 5,
         "flying_speed": 15,
+        "depth": 64,
+        "water_level": 32,
     },
 }
 
@@ -91,6 +92,8 @@ def test_load_configuration_file():
             "terminal_velocity": 431,
             "walking_speed": 12,
             "flying_speed": 34,
+            "depth": 60,
+            "water_level": 3,
         },
     }
 

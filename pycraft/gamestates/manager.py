@@ -24,6 +24,8 @@ class GameStateManager:
     def switch_game_state(self):
         if not self.peek().active:
             self.state += 1
+            if self.peek().world:
+                self.world = self.peek().world
             self.create_state()
 
     def peek(self):

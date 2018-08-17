@@ -62,6 +62,8 @@ class ConfigurationLoader:
                 "terminal_velocity": 50,
                 "walking_speed": 5,
                 "flying_speed": 15,
+                "depth": 64,
+                "water_level": 32,
             }
         }
 

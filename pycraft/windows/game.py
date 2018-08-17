@@ -4,7 +4,6 @@ import pyglet.clock
 import pyglet.window
 
 from pycraft.gamestates.manager import GameStateManager
-from pycraft.gamestates.states.mainscreen import MainScreenState
 
 
 class GameWindow(pyglet.window.Window):
@@ -64,6 +63,7 @@ class GameWindow(pyglet.window.Window):
         """
         if self.exclusive:
             self.manager.peek().on_mouse_motion(x, y, dx, dy)
+
     #
     # def on_key_press(self, symbol, modifiers):
     #     """Called when the player presses a key. See pyglet docs for key
@@ -111,11 +111,6 @@ class GameWindow(pyglet.window.Window):
 
             Pass the current window size
         """
-        # vbox = self.get_vbox()
-        # self.gui.add(vbox)
-        # # pass
-
-        # self.clear()
         self.manager.peek().on_draw(self.get_size())
 
     def update(self, dt):
