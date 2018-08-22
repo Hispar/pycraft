@@ -49,23 +49,23 @@ class World:
         # A mapping from position to the texture of the block at that position.
         # This defines all the blocks that are currently in the world.
         self.area = Area()
-
-    def create_sectors(self, coords):
-        """
-        Creates initial sectors in spiral, to speed up rendering in front of
-        the player
-        :param coords:
-        :return:
-        """
-        x, y = 0, 0
-        dx, dy = 0, -1
-        max_x, max_y = coords[0] + 4, coords[2] + 4
-        for i in range(max(max_x, max_y) ** 2):
-            if (-max_x / 2 < x <= max_x / 2) and (-max_y / 2 < y <= max_y / 2):
-                self.show_sector((x, coords[1], y), False)
-            if x == y or (x < 0 and x == -y) or (x > 0 and x == 1 - y):
-                dx, dy = -dy, dx  # Corner change direction
-            x, y = x + dx, y + dy
+    #
+    # def create_sectors(self, coords):
+    #     """
+    #     Creates initial sectors in spiral, to speed up rendering in front of
+    #     the player
+    #     :param coords:
+    #     :return:
+    #     """
+    #     x, y = 0, 0
+    #     dx, dy = 0, -1
+    #     max_x, max_y = coords[0] + 4, coords[2] + 4
+    #     for i in range(max(max_x, max_y) ** 2):
+    #         if (-max_x / 2 < x <= max_x / 2) and (-max_y / 2 < y <= max_y / 2):
+    #             self.show_sector((x, coords[1], y), False)
+    #         if x == y or (x < 0 and x == -y) or (x > 0 and x == 1 - y):
+    #             dx, dy = -dy, dx  # Corner change direction
+    #         x, y = x + dx, y + dy
 
     def get_blocks(self):
         return self.area.get_blocks()
