@@ -8,18 +8,25 @@ from pycraft.world.generators.subterranean import SubterraneanArea
 class Generator:
     def __init__(self, config, map_size):
         print(config['world'], map_size)
+        # Create 2D height map
         height_map_generator = HeightMap(config['world']['water_level'],
                                          map_size)
         height_map = height_map_generator.create_height_map()
 
+        # Create 3D block map
         strata_generator = StrataMap(config['world']['depth'], height_map)
         strata_map = strata_generator.create_strata()
 
         subterraean_generator = SubterraneanArea(strata_map)
+        # Get random positions for caves
+        limits = map_size + (config['world']['depth'],)
+        coords = subterraean_generator.get_random_underground_positions(2,
+                                                                        limits)
 
-        coords = Coord(5, 7, 5)
-        cave_generator = Cave(strata_map, subterraean_generator, 'air')
-        cave_generator.create_cave(coords)
+        # Create caves
+        for coord in coords:
+            cave_generator = Cave(strata_map, subterraean_generator, 'air')
+            cave_generator.create_cave(coord)
 
         # self.depth = config['world']['depth']
 

@@ -17,3 +17,10 @@ class Validator:
             if block != 'Stone':
                 return True
         return False
+
+    def is_underground(self, coords):
+        if self.is_in_map(coords):
+            block = self.blocks[coords.x][coords.y][coords.z]
+            if block not in ['Stone', 'Air']:
+                return True
+        return False

@@ -15,5 +15,4 @@ def main():
 
     GameWindow(config=config_data, caption=WINDOW_CAPTION)
 
-    generator = Generator(config_data, (10, 10))
     pyglet.app.run()

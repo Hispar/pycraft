@@ -4,6 +4,7 @@ from pycraft.gamestates.base import States
 from pycraft.gamestates.gamestate import GameState
 from pycraft.objects.player import Player
 from pycraft.windows.layouts.loading import LoadingLayout
+from pycraft.world.generator import Generator
 from pycraft.world.world import World
 
 
@@ -21,6 +22,7 @@ class LoadingState(GameState):
     def load_world(self, config):
         world = World()
         player = Player(config["world"])
+        generator = Generator(config, (255, 255))
         world.create_sectors(player.position)
         self.world = world
 

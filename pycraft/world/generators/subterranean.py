@@ -25,6 +25,21 @@ class SubterraneanArea:
         blocks = self.create_area_skeleton()
         return self.fill_area(blocks)
 
+    def get_random_underground_positions(self, count, limits):
+        """
+        Return :count: random underground positions
+        :param count: Number of positions
+        :param limits: map dimensions
+        :return:
+        """
+        positions = []
+        while len(positions) < count:
+            x, y, z = limits
+            pos = Coord(random.randint(0, x), random.randint(0, y), random.randint(0, z))
+            if self.validator.is_underground(pos):
+                positions.append(pos)
+        return positions
+
     def create_area_skeleton(self):
         pos = self.coords
         blocks = [pos.get_as_tuple()]
