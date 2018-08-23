@@ -1,5 +1,4 @@
 from pycraft.world.generators.cave import Cave
-from pycraft.world.generators.coords import Coord
 from pycraft.world.generators.height import HeightMap
 from pycraft.world.generators.strata import StrataMap
 from pycraft.world.generators.subterranean import SubterraneanArea
@@ -20,15 +19,15 @@ class Generator:
         strata_generator = StrataMap(self.config['depth'], height_map)
         strata_map = strata_generator.create_strata()
 
-        subterraean_generator = SubterraneanArea(strata_map)
+        subterranean_generator = SubterraneanArea(strata_map)
         # Get random positions for caves
         limits = self.map_size + (self.config['depth'],)
-        coords = subterraean_generator.get_random_underground_positions(
+        coords = subterranean_generator.get_random_underground_positions(
             2, limits)
 
         # Create caves
         for coord in coords:
-            cave_generator = Cave(strata_map, subterraean_generator, 'air')
+            cave_generator = Cave(strata_map, subterranean_generator, 'air')
             cave_generator.create_cave(coord)
 
         return strata_map

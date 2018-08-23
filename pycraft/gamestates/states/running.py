@@ -35,9 +35,9 @@ class RunningState(GameState):
         self.width = config["window"]["width"]
         self.height = config["window"]["height"]
 
-        self.world = World()
-        self.player = Player(config["world"])
-        self.world.create_sectors(self.player.position)
+        # self.world = World()
+        # self.player = Player(config["world"])
+        # self.world.create_sectors(self.player.position)
 
     def _init_gui(self, gui):
         self.layout = RunningLayout()

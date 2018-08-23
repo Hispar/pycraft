@@ -22,7 +22,7 @@ class LoadingState(GameState):
     def load_world(self, config):
         world = World()
         player = Player(config["world"])
-        generator = Generator(config, (255, 255))
+        generator = Generator(config, (10, 10))
         blocks = generator.generate()
         # world.create_sectors(player.position)
         self.world = world
