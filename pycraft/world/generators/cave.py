@@ -1,3 +1,6 @@
+from pycraft.objects.block import get_block
+
+
 class Cave:
     def __init__(self, strata, subterraean_generator, fill):
         self.strata = strata
@@ -12,4 +15,4 @@ class Cave:
         """
         blocks = self.subterraean_generator.get_area(coords, 1, 3)
         for block in blocks:
-            self.strata[block[0]][block[1]][block[2]] = self.fill
+            self.strata[block[0]][block[1]][block[2]] = get_block(self.fill)

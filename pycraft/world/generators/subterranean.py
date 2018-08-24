@@ -3,7 +3,7 @@ from math import sin, cos
 from operator import add, sub
 
 from pycraft.world.generators.coords import Coord
-from pycraft.world.generators.validator import Validator
+from pycraft.world.validator import Validator
 
 
 class SubterraneanArea:

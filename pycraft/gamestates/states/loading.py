@@ -1,7 +1,6 @@
-import asyncio
-
 from pycraft.gamestates.base import States
 from pycraft.gamestates.gamestate import GameState
+from pycraft.objects.map import Map
 from pycraft.objects.player import Player
 from pycraft.windows.layouts.loading import LoadingLayout
 from pycraft.world.generator import Generator
@@ -20,11 +19,10 @@ class LoadingState(GameState):
             self.load_world(config)
 
     def load_world(self, config):
-        world = World()
-        player = Player(config["world"])
         generator = Generator(config, (10, 10))
-        blocks = generator.generate()
-        # world.create_sectors(player.position)
+        strata = generator.generate()
+        map = Map(strata)
+        world = World(map)
         self.world = world
 
     def _init_gui(self, gui):

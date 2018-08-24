@@ -1,4 +1,5 @@
 from pycraft.gamestates.factory import GameStateFactory
+from pycraft.objects.player import Player
 
 
 class GameStateManager:
@@ -15,9 +16,11 @@ class GameStateManager:
         self.stack = list()
         self.state = 1
         self.factory = GameStateFactory(gui, config)
+        self.world = None
+        self.player = Player(config["world"])
 
     def create_state(self):
-        game_state = self.factory.get_game_state(self.state)
+        game_state = self.factory.get_game_state(self.state, self.player, self.world)
         self.push(game_state)
 
     # TODO define a good way to map each possible game state

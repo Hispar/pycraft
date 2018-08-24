@@ -1,5 +1,7 @@
 from noise.perlin import SimplexNoise
 
+from pycraft.objects.block import get_block
+
 simplex_noise2 = SimplexNoise(256).noise2
 
 
@@ -27,13 +29,13 @@ class StrataMap:
                 for y in range(self.depth):
                     block_type = 'Air'
                     if y <= 0:
-                        block_type = 'Stone'
+                        block_type = 'Unbreakable'
                     elif y <= stone_transition:
                         block_type = 'WeakStone'
                     elif y <= dirt_transition:
                         block_type = 'Dirt'
 
-                    y_map[y] = block_type
+                    y_map[y] = get_block(block_type)
 
                 block_map[x][z] = y_map
 

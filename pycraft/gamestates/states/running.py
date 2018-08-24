@@ -2,6 +2,7 @@ import glooey
 
 from pycraft.gamestates.base import States
 from pycraft.gamestates.gamestate import GameState
+from pycraft.shader import Shader
 from pycraft.windows.interface.title import Title
 from pycraft.windows.layouts.running import RunningLayout
 from pycraft.world.world import World
@@ -22,11 +23,12 @@ NUMERIC_KEYS = [
 
 
 class RunningState(GameState):
-    def __init__(self, gui, config, world):
+    def __init__(self, gui, config, player, world):
         super(RunningState, self).__init__()
         self.state = States.RUNNING
         self.active = True
         self.world = world
+        self.player = player
         # The crosshairs at the center of the screen.
         self.reticle = None
         self._init_gui(gui)
@@ -35,9 +37,9 @@ class RunningState(GameState):
         self.width = config["window"]["width"]
         self.height = config["window"]["height"]
 
-        # self.world = World()
-        # self.player = Player(config["world"])
-        # self.world.create_sectors(self.player.position)
+        self.init_shader()
+
+        self.world.show_area(self.player.position)
 
     def _init_gui(self, gui):
         self.layout = RunningLayout()
@@ -117,9 +119,9 @@ class RunningState(GameState):
     def on_draw(self, size):
         self.set_3d(size)
         GL.glColor3d(1, 1, 1)
-        self.world.start_shader()
+        self.start_shader()
         self.world.batch.draw()
-        self.world.stop_shader()
+        self.stop_shader()
         self.draw_focused_block()
 
         self.set_2d(size)
@@ -156,29 +158,30 @@ class RunningState(GameState):
 
     def update(self, dt, ticks_per_second):
         self.world.process_queue(ticks_per_second)
-        sector = sectorize(self.player.position)
-        if sector != self.world.sector:
-            self.world.change_sectors(self.world.sector, sector)
-            if self.world.sector is None:
-                self.world.process_entire_queue()
-            self.world.sector = sector
+        # sector = sectorize(self.player.position)
+        # if sector != self.world.sector:
+        #     self.world.change_sectors(self.world.sector, sector)
+        #     if self.world.sector is None:
+        self.world.process_entire_queue()
+            # self.world.sector = sector
         m = 8
         dt = min(dt, 0.2)
         for _ in range(m):
-            self.player.update(dt / m, self.world.get_blocks())
+            self.player.update(dt / m, None)
 
     def draw_focused_block(self):
         """Draw black edges around the block that is currently under the
         crosshairs.
         """
-        block = self.player.hit(self.world.get_blocks())[0]
-        if block:
-            x, y, z = block
-            vertex_data = cube_vertices(x, y, z, 0.51)
-            GL.glColor3d(0, 0, 0)
-            GL.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE)
-            pyglet.graphics.draw(24, GL.GL_QUADS, ('v3f/static', vertex_data))
-            GL.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL)
+        pass
+        # block = self.player.hit(self.world.get_blocks())[0]
+        # if block:
+        #     x, y, z = block
+        #     vertex_data = cube_vertices(x, y, z, 0.51)
+        #     GL.glColor3d(0, 0, 0)
+        #     GL.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE)
+        #     pyglet.graphics.draw(24, GL.GL_QUADS, ('v3f/static', vertex_data))
+        #     GL.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL)
 
     def draw_labels(self):
         """Draw the label in the top left of the screen."""
@@ -186,7 +189,7 @@ class RunningState(GameState):
         self.layout.set_title(
             '{:2d} ({:.2f}, {:.2f}, {:.2f}) {:d} / {:d}'.format(
                 int(pyglet.clock.get_fps()), x, y, z,
-                len(self.world._shown), len(self.world.get_blocks())))
+                len(self.world.visibility.coords), self.world.map.get_block_number()))
         # self.game_info_label.text = '%02d (%.2f, %.2f, %.2f) %d / %d' % (
         #     pyglet.clock.get_fps(), x, y, z,
         #     len(self.world._shown), len(self.world.get_blocks()))
@@ -199,3 +202,21 @@ class RunningState(GameState):
         GL.glColor3d(0, 0, 0)
         if self.reticle:
             self.reticle.draw(GL.GL_LINES)
+
+    def init_shader(self):
+        vertex_shader = ""
+        fragment_shader = ""
+
+        with open("pycraft/shaders/world.vert") as handle:
+            vertex_shader = handle.read()
+
+        with open("pycraft/shaders/world.frag") as handle:
+            fragment_shader = handle.read()
+
+        self.shader = Shader([vertex_shader], [fragment_shader])
+
+    def start_shader(self):
+        self.shader.bind()
+
+    def stop_shader(self):
+        self.shader.unbind()

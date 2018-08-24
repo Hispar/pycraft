@@ -75,3 +75,12 @@ class WeakStone(Block):
 class Stone(Block):
     identifier = 'Stone'
     texture = STONE
+
+
+class Unbreakable(Block):
+    identifier = 'Unbreakable'
+    texture = STONE
+
+
+class Air(Block):
+    identifier = 'Air'

@@ -11,10 +11,10 @@ class GameStateFactory:
         self.gui = gui
         self.config = config
 
-    def get_game_state(self, state, world=None):
+    def get_game_state(self, state, player, world=None):
         try:
             if States(state) == States.RUNNING:
-                return RunningState(self.gui, self.config, world)
+                return RunningState(self.gui, self.config, player, world)
             if States(state) == States.LOADING:
                 return LoadingState(self.gui, self.config, world)
         except ValueError:

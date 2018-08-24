@@ -43,8 +43,8 @@ class Character(WorldObject):
         # relative to where the player is facing. 1 when moving up, -1 when moving down
         self.strafe_z = 0
         # Current (x, y, z) position in the world, specified with floats. Note
-        # that, perhaps unlike in math class, the y-axis is the vertical axis.
-        self.position = (0, 5, 0)
+        # that, the z-axis is the vertical axis.
+        self.position = (5, 5, 35)
         # First element is rotation of the player in the x-z plane (ground
         # plane) measured from the z-axis down. The second is the rotation
         # angle from the ground plane up. Rotation is in degrees.
@@ -150,7 +150,7 @@ class Character(WorldObject):
             dy += self.dy * dt
         # collisions
         x, y, z = self.position
-        x, y, z = self.collide((x + dx, y + dy, z + dz), self.config["player_height"], objects)
+        # x, y, z = self.collide((x + dx, y + dy, z + dz), self.config["player_height"], objects)
         self.position = (x, y, z)
 
     def collide(self, position, height, objects):
