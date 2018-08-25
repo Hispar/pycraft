@@ -19,6 +19,18 @@ class GameState:
     def on_draw(self, size):
         pass
 
+    def on_mouse_press(self, x, y, button, modifiers):
+        pass
+
+    def on_mouse_motion(self, x, y, dx, dy):
+        pass
+
+    def on_key_press(self, symbol, modifiers, controls):
+        pass
+
+    def on_key_release(self, symbol, modifiers, controls):
+        pass
+
     # --- ** ---
     # Methods related to the GameStateManager
     """

@@ -1,7 +1,7 @@
 .. image:: https://travis-ci.org/traverseda/pycraft.svg?branch=master
     :target: https://travis-ci.org/traverseda/pycraft
-.. image:: https://coveralls.io/repos/github/traverseda/pycraft/badge.svg?branch=master 
-    :target: https://coveralls.io/github/traverseda/pycraft?branch=master 
+.. image:: https://coveralls.io/repos/github/traverseda/pycraft/badge.svg?branch=master
+    :target: https://coveralls.io/github/traverseda/pycraft?branch=master
 
 PyCraft
 =======
@@ -136,3 +136,6 @@ by
 `Alex Voelk <http://www.alexvoelk.de/>`__
 is licensed under
 `CC BY 3.0 <https://creativecommons.org/licenses/by/3.0/>`__.
+
+Map generation Algorithm
+https://github.com/UnknownShadow200/ClassicalSharp/wiki/Minecraft-Classic-map-generation-algorithm

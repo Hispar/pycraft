@@ -6,8 +6,9 @@ from enum import Enum, auto
 
 class States(Enum):
     MAIN_SCREEN = auto()
-    # MAIN_MENU = 2
+    LOADING = auto()
+    # MAIN_MENU = auto()
     RUNNING = auto()
-    # INVENTORY_MENU = 4
-    # CRAFTING_MENU = 5
-    # OPTIONS_MENU = 6
+    # INVENTORY_MENU = auto()
+    # CRAFTING_MENU = auto()
+    # OPTIONS_MENU = auto()

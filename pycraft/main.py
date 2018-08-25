@@ -13,4 +13,5 @@ def main():
     config_loader.check_configuration()
 
     GameWindow(config=config_data, caption=WINDOW_CAPTION)
+
     pyglet.app.run()

@@ -46,7 +46,7 @@ class Sector:
         """
         for column in reverse_sectorize(coords):
             x, z = column
-            y_max = int((simplex_noise2(x / 30, z / 30) + 1) * 3)
+            y_max = int((simplex_noise2(x / 20, z / 20) + 1) * 3)
             for y_lvl in range(0 - 2, y_max):
                 self.add_block((x, y_lvl, z), Sand())
             else:

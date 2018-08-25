@@ -57,6 +57,14 @@ class Sand(Block):
     durability = 2
 
 
+class Dirt(Block):
+    texture_path = 'pycraft/textures/sand.png'
+    identifier = 'Dirt'
+    texture = BRICK
+    breakable = True
+    durability = 3
+
+
 class WeakStone(Block):
     identifier = 'WeakStone'
     texture = STONE
@@ -67,3 +75,12 @@ class WeakStone(Block):
 class Stone(Block):
     identifier = 'Stone'
     texture = STONE
+
+
+class Unbreakable(Block):
+    identifier = 'Unbreakable'
+    texture = STONE
+
+
+class Air(Block):
+    identifier = 'Air'

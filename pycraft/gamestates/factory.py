@@ -1,4 +1,5 @@
 from pycraft.gamestates.base import States
+from pycraft.gamestates.states.loading import LoadingState
 from pycraft.gamestates.states.mainscreen import MainScreenState
 from pycraft.gamestates.states.running import RunningState
 
@@ -10,10 +11,12 @@ class GameStateFactory:
         self.gui = gui
         self.config = config
 
-    def get_game_state(self, state):
+    def get_game_state(self, state, player, world=None):
         try:
             if States(state) == States.RUNNING:
-                return RunningState(self.gui, self.config)
+                return RunningState(self.gui, self.config, player, world)
+            if States(state) == States.LOADING:
+                return LoadingState(self.gui, self.config, world)
         except ValueError:
             pass
         return MainScreenState(self.gui, self.config)

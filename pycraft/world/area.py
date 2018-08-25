@@ -14,6 +14,9 @@ class Area:
         # This defines all the blocks that are currently in the world.
         self.blocks = {}
 
+    def set_blocks(self, blocks):
+        self.blocks = blocks
+
     def get_blocks(self):
         return self.blocks
 
