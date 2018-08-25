@@ -38,10 +38,9 @@ class World:
         self.map = map
 
     def show_area(self, coords):
-        area = self.map.get_surface_blocks(10, coords)
+        area = self.map.get_surface_blocks(50, coords)
         if not area:
             return False
-        print(area)
         for coord in area:
             self._show_block(coord)
 
@@ -117,7 +116,7 @@ class World:
             The (x, y, z) position of the block to show.
         """
         x, y, z = coords
-        block = self.map.get_block(coords)
+        block = self.map.get_block((x, z, y))
         vertex_data = cube_vertices(x, y, z, 0.5)
         shade_data = cube_shade(1, 1, 1, 1)
         texture_data = block.texture
@@ -173,34 +172,34 @@ class World:
             self._dequeue()
 
     # def add_sector(self, sector, coords):
-    #     #     self.sector = coords
-    #     #     self.sectors[coords] = sector
-    #     #     # self.sectors.setdefault(coords, []).append(sector)
-    #     #
-    #     # def show_sector(self, coords, immediate=True):
-    #     #     """Ensure all blocks in the given sector that should be shown are drawn
-    #     #     to the canvas.
-    #     #     """
-    #     #     sector = self.sectors.get(coords)
-    #     #     if sector:
-    #     #         for position in sector.blocks:
-    #     #             if position not in self.shown and self.area.exposed(position):
-    #     #                 self.show_block(position, immediate)
-    #     #     else:
-    #     #         sector = Sector(coords, self.area)
-    #     #         self.add_sector(sector, coords)
-    #     #         self.show_sector(coords)
-    #     #
-    #     # def hide_sector(self, coords):
-    #     #     """Ensure all blocks in the given sector that should be hidden are
-    #     #     removed from the canvas.
-    #     #     """
-    #     #     sector = self.sectors.get(coords)
-    #     #     if not sector:
-    #     #         return
-    #     #     for position in sector.blocks:
-    #     #         if position in self.shown:
-    #     #             self.hide_block(position, False)
+    #     self.sector = coords
+    #     self.sectors[coords] = sector
+    #     # self.sectors.setdefault(coords, []).append(sector)
+    #
+    # def show_sector(self, coords, immediate=True):
+    #     """Ensure all blocks in the given sector that should be shown are drawn
+    #     to the canvas.
+    #     """
+    #     sector = self.sectors.get(coords)
+    #     if sector:
+    #         for position in sector.blocks:
+    #             if position not in self.shown and self.area.exposed(position):
+    #                 self.show_block(position, immediate)
+    #     else:
+    #         sector = Sector(coords, self.area)
+    #         self.add_sector(sector, coords)
+    #         self.show_sector(coords)
+    #
+    # def hide_sector(self, coords):
+    #     """Ensure all blocks in the given sector that should be hidden are
+    #     removed from the canvas.
+    #     """
+    #     sector = self.sectors.get(coords)
+    #     if not sector:
+    #         return
+    #     for position in sector.blocks:
+    #         if position in self.shown:
+    #             self.hide_block(position, False)
 
     # def change_sectors(self, before, after):
     #     """Move from sector `before` to sector `after`. A sector is a

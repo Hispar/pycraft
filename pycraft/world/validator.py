@@ -7,9 +7,12 @@ class Validator:
     def __init__(self, blocks):
         self.blocks = blocks
 
+    def get_block(self, coords):
+        return self.blocks[coords.x][coords.z][coords.y]
+
     def is_in_map(self, coords):
         try:
-            block = self.blocks[coords.x][coords.y][coords.z]
+            block = self.get_block(coords)
         except KeyError:
             return False
         except IndexError:
@@ -22,7 +25,7 @@ class Validator:
         :param coords:
         :return:
         """
-        block = self.blocks[coords.x][coords.y][coords.z]
+        block = self.get_block(coords)
         if block.identifier in UNBREAKABLE_BLOCKS:
             return True
         return False
@@ -33,7 +36,7 @@ class Validator:
         :param coords:
         :return:
         """
-        block = self.blocks[coords.x][coords.y][coords.z]
+        block = self.get_block(coords)
         if block.identifier == unbreakable.identifier:
             return True
         return False
@@ -44,7 +47,7 @@ class Validator:
         :param coords:
         :return:
         """
-        block = self.blocks[coords.x][coords.y][coords.z]
+        block = self.get_block(coords)
         if block.identifier == air.identifier:
             return True
         return False

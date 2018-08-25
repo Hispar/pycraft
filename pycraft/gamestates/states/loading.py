@@ -19,7 +19,7 @@ class LoadingState(GameState):
             self.load_world(config)
 
     def load_world(self, config):
-        generator = Generator(config, (10, 10))
+        generator = Generator(config, (100, 100))
         strata = generator.generate()
         map = Map(strata)
         world = World(map)

@@ -15,7 +15,7 @@ class Coord:
         self.z = z
 
     def get_as_tuple(self):
-        return round(self.x), round(self.y), round(self.z)
+        return round(self.x), round(self.z), round(self.y)
 
     def get_neighbours(self):
         """
@@ -25,15 +25,15 @@ class Coord:
         neighbours = []
         x, y, z = self.get_as_tuple()
         for dx, dy, dz in FACES:
-            neighbours.append((x + dx, y + dy, z + dz))
+            neighbours.append((x + dx, z + dz, y + dy))
         return neighbours
 
     def get_floor(self):
         neighbours = []
         x, y, z = self.get_as_tuple()
         for dx, dy, dz in FACES:
-            neighbours.append((x + dx, y + dy, z))
+            neighbours.append((x + dx, z, y + dy))
         return neighbours
 
     def __str__(self):
-        return '({},{},{})'.format(self.x, self.y, self.z)
+        return '(x:{}, y:{}, z:{})'.format(self.x, self.y, self.z)

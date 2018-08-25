@@ -162,12 +162,12 @@ class RunningState(GameState):
         # if sector != self.world.sector:
         #     self.world.change_sectors(self.world.sector, sector)
         #     if self.world.sector is None:
-        self.world.process_entire_queue()
+        # self.world.process_entire_queue()
             # self.world.sector = sector
         m = 8
         dt = min(dt, 0.2)
         for _ in range(m):
-            self.player.update(dt / m, None)
+            self.player.update(dt / m, self.world.map)
 
     def draw_focused_block(self):
         """Draw black edges around the block that is currently under the

@@ -46,3 +46,7 @@ class HeightMap:
                 initial_map[x][z] = self.height_field(x, z)
 
         return initial_map
+
+    def create_flat_map(self):
+        return [[34 for x in range(self.map_size[0])] for y in
+                range(self.map_size[0])]

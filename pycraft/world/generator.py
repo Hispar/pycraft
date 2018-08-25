@@ -13,7 +13,8 @@ class Generator:
         # Create 2D height map
         height_map_generator = HeightMap(self.config['water_level'],
                                          self.map_size)
-        height_map = height_map_generator.create_height_map()
+#        height_map = height_map_generator.create_height_map()
+        height_map = height_map_generator.create_flat_map()
 
         # Create 3D block map
         strata_generator = StrataMap(self.config['depth'], height_map)

@@ -18,14 +18,14 @@ class StrataMap:
         :param height_map: previously calculate height map
         :return:
         """
-        block_map = self.height_map
+        block_map = self.height_map.copy()
         for x, column in enumerate(self.height_map):
             for z, val in enumerate(column):
                 dirt_thickness = simplex_noise2(x, z) / 24 - 4
-                dirt_transition = self.height_map[x][z]
+                dirt_transition = val
                 stone_transition = dirt_thickness + dirt_transition
+                block_map[x][z] = []
 
-                y_map = {i: '' for i in range(self.depth)}
                 for y in range(self.depth):
                     block_type = 'Air'
                     if y <= 0:
@@ -35,8 +35,6 @@ class StrataMap:
                     elif y <= dirt_transition:
                         block_type = 'Dirt'
 
-                    y_map[y] = get_block(block_type)
-
-                block_map[x][z] = y_map
+                    block_map[x][z].append(get_block(block_type))
 
         return block_map
