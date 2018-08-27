@@ -149,6 +149,7 @@ class Character(WorldObject):
             self.dy -= dt * self.config['gravity']
             self.dy = max(self.dy, -self.config["terminal_velocity"])
             dy += self.dy * dt
+
         # collisions
         x, y, z = self.position
         x, y, z = self.collide((x + dx, y + dy, z + dz), self.config["player_height"], map)

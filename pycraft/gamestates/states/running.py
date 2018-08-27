@@ -49,19 +49,19 @@ class RunningState(GameState):
     def on_mouse_press(self, x, y, button, modifiers):
         if (button == mouse.RIGHT) or \
                 ((button == mouse.LEFT) and (modifiers & key.MOD_CTRL)):
-            block, previous = self.player.hit(self.world.get_blocks(),
+            block, previous = self.player.hit(self.world.map,
                                               left=False)
             # ON OSX, control + left click = right click.
-            if block and self.player.current_item:
-                self.world.add_block(previous,
-                                     get_block(self.player.get_block()))
+            # if block and self.player.current_item:
+                # self.world.add_block(previous,
+                #                      get_block(self.player.get_block()))
 
         elif button == mouse.LEFT:
-            block = self.player.hit(self.world.get_blocks())[0]
+            block = self.player.hit(self.world.map)[0]
             if block:
-                texture = self.world.area.get_block(block)
-                if texture.hit_and_destroy():
-                    self.world.remove_block(block)
+                texture = self.world.map.get_block(block)
+                # if texture.hit_and_destroy():
+                #     self.world.remove_block(block)
 
     def on_mouse_motion(self, x, y, dx, dy):
         m = 0.15
@@ -173,15 +173,14 @@ class RunningState(GameState):
         """Draw black edges around the block that is currently under the
         crosshairs.
         """
-        pass
-        # block = self.player.hit(self.world.get_blocks())[0]
-        # if block:
-        #     x, y, z = block
-        #     vertex_data = cube_vertices(x, y, z, 0.51)
-        #     GL.glColor3d(0, 0, 0)
-        #     GL.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE)
-        #     pyglet.graphics.draw(24, GL.GL_QUADS, ('v3f/static', vertex_data))
-        #     GL.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL)
+        block = self.player.hit(self.world.map)[0]
+        if block:
+            x, y, z = block
+            vertex_data = cube_vertices(x, y, z, 0.51)
+            GL.glColor3d(0, 0, 0)
+            GL.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE)
+            pyglet.graphics.draw(24, GL.GL_QUADS, ('v3f/static', vertex_data))
+            GL.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL)
 
     def draw_labels(self):
         """Draw the label in the top left of the screen."""

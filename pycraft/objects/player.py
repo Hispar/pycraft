@@ -54,7 +54,7 @@ class Player(Character):
         dz = math.sin(math.radians(x - 90)) * m
         return dx, dy, dz
 
-    def hit(self, blocks, max_distance=8, left=True):
+    def hit(self, map, max_distance=8, left=True):
         """Line of sight search from current position. If a block is
         intersected it is returned, along with the block previously in the line
         of sight. If no block is found, return None, None.
@@ -75,7 +75,7 @@ class Player(Character):
         previous = None
         for _ in range(max_distance * m):
             key = normalize((x, y, z))
-            if key != previous and key in blocks:
+            if key != previous and map.get_block(key):
                 if not left and (previous == head or previous == feet):
                     continue
                 # Make sure the block isn't the player's head or feet in case of adding.
